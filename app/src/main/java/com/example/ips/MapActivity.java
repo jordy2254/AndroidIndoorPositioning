@@ -6,7 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 
-import com.example.ips.model.data.Map;
+import com.example.ips.model.data.map.persisted.MapWrapper;
 
 public class MapActivity extends AppCompatActivity {
 
@@ -17,7 +17,7 @@ public class MapActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
        Intent intent = getIntent();
-       Map map = (Map) intent.getSerializableExtra("map");
+        MapWrapper map = (MapWrapper) intent.getSerializableExtra("map");
 
         canvas = findViewById(R.id.mapCanvas);
         canvas.setMap(map);

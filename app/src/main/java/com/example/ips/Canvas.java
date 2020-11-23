@@ -10,14 +10,14 @@ import android.view.View;
 
 import androidx.annotation.Nullable;
 
-import com.example.ips.model.data.Map;
+import com.example.ips.model.data.map.persisted.MapWrapper;
 
 import java.util.Random;
 
 public class Canvas extends View {
     Random random = new Random();
     Paint paint;
-    Map map;
+    MapWrapper map;
 
 
     public Canvas(Context context) {
@@ -40,11 +40,11 @@ public class Canvas extends View {
         canvas.drawRect(0,0,100,100,paint);
     }
 
-    public Map getMap() {
+    public MapWrapper getMap() {
         return map;
     }
 
-    public void setMap(Map map) {
+    public void setMap(MapWrapper map) {
         this.map = map;
     }
 }
