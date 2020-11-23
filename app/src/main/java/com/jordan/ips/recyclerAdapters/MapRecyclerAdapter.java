@@ -1,10 +1,9 @@
-package com.example.ips.recyclerAdapters;
+package com.jordan.ips.recyclerAdapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -13,20 +12,19 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.ips.R;
-import com.example.ips.model.data.Map;
+import com.jordan.ips.model.data.map.persisted.MapWrapper;
 
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
 public class MapRecyclerAdapter extends RecyclerView.Adapter<MapRecyclerAdapter.ViewHolder> {
 
-    private List<Map> mData;
+    private List<MapWrapper> mData;
     private LayoutInflater mInflater;
     private MapRecyclerAdapterListeners mapRecyclerAdapterListeners;
 
     // data is passed into the constructor
-    public MapRecyclerAdapter(Context context, List<Map> data) {
+    public MapRecyclerAdapter(Context context, List<MapWrapper> data) {
         this.mInflater = LayoutInflater.from(context);
         this.mData = data;
     }
@@ -42,9 +40,9 @@ public class MapRecyclerAdapter extends RecyclerView.Adapter<MapRecyclerAdapter.
     // binds the data to the TextView in each row
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        Map map = mData.get(position);
-        holder.mapName.setText(map.getMapName());
-        holder.mapDescription.setText(map.getDescription());
+        MapWrapper map = mData.get(position);
+        holder.mapName.setText(map.getMap().getName());
+        holder.mapDescription.setText("Description not yet implemented");
         holder.mapIcon.setImageResource(R.drawable.map);
         if(map.getLastSyncedDate() == null || map.isSyncing()){
             holder.lastSyncDate.setText("Never");
@@ -83,7 +81,7 @@ public class MapRecyclerAdapter extends RecyclerView.Adapter<MapRecyclerAdapter.
         return mData.size();
     }
 
-    public void addMap(Map map) {
+    public void addMap(MapWrapper map) {
         mData.add(map);
         notifyDataSetChanged();
     }
@@ -115,7 +113,7 @@ public class MapRecyclerAdapter extends RecyclerView.Adapter<MapRecyclerAdapter.
         @Override
         public void onClick(View view) {
             if (mapRecyclerAdapterListeners != null){
-                Map map = mData.get(getAdapterPosition());
+                MapWrapper map = mData.get(getAdapterPosition());
                 if(map.isSyncing() || map.getLastSyncedDate() == null){
                     return;
                 }
@@ -124,7 +122,7 @@ public class MapRecyclerAdapter extends RecyclerView.Adapter<MapRecyclerAdapter.
         }
     }
 
-    public List<Map> getmData() {
+    public List<MapWrapper> getmData() {
         return mData;
     }
 
@@ -135,8 +133,8 @@ public class MapRecyclerAdapter extends RecyclerView.Adapter<MapRecyclerAdapter.
 
     // parent activity will implement this method to respond to click events
     public interface MapRecyclerAdapterListeners {
-        void mapRecyclerOnItemClick(View view, int position, Map map);
-        void mapRecyclerOnItemDelete(View view, int position, Map map);
+        void mapRecyclerOnItemClick(View view, int position, MapWrapper map);
+        void mapRecyclerOnItemDelete(View view, int position, MapWrapper map);
 
     }
 }

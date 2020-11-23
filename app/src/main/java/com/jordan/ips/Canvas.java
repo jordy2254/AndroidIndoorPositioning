@@ -1,23 +1,20 @@
-package com.example.ips;
+package com.jordan.ips;
 
 import android.content.Context;
 import android.graphics.Paint;
-import android.graphics.Path;
-import android.graphics.PathEffect;
 import android.util.AttributeSet;
-import android.view.GestureDetector;
 import android.view.View;
 
 import androidx.annotation.Nullable;
 
-import com.example.ips.model.data.Map;
+import com.jordan.ips.model.data.map.persisted.MapWrapper;
 
 import java.util.Random;
 
 public class Canvas extends View {
     Random random = new Random();
     Paint paint;
-    Map map;
+    MapWrapper map;
 
 
     public Canvas(Context context) {
@@ -40,11 +37,11 @@ public class Canvas extends View {
         canvas.drawRect(0,0,100,100,paint);
     }
 
-    public Map getMap() {
+    public MapWrapper getMap() {
         return map;
     }
 
-    public void setMap(Map map) {
+    public void setMap(MapWrapper map) {
         this.map = map;
     }
 }

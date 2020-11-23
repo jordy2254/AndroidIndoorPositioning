@@ -1,8 +1,10 @@
-package com.example.ips;
+package com.jordan.ips;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+
+import com.example.ips.R;
 
 public class LocationActivity extends AppCompatActivity {
 

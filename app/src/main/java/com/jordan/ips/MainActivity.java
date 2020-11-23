@@ -1,4 +1,4 @@
-package com.example.ips;
+package com.jordan.ips;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -14,10 +14,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
-import com.example.ips.mapSyncronisation.MapSyncronisationDialog;
-import com.example.ips.mapSyncronisation.MapSyncronisationDialogConfirmListener;
-import com.example.ips.model.data.Map;
-import com.example.ips.recyclerAdapters.MapRecyclerAdapter;
+import com.example.ips.R;
+import com.jordan.ips.mapSyncronisation.MapSyncronisationDialog;
+import com.jordan.ips.mapSyncronisation.MapSyncronisationDialogConfirmListener;
+
+import com.jordan.ips.model.data.map.persisted.Map;
+import com.jordan.ips.model.data.map.persisted.MapWrapper;
+import com.jordan.ips.recyclerAdapters.MapRecyclerAdapter;
 
 import java.util.ArrayList;
 
@@ -34,7 +37,7 @@ public class MainActivity extends AppCompatActivity implements MapSyncronisation
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        ArrayList<Map> maps = new ArrayList<>();
+        ArrayList<MapWrapper> maps = new ArrayList<>();
         Toolbar myToolbar = findViewById(R.id.toolbar);
         setSupportActionBar(myToolbar);
 
@@ -87,20 +90,28 @@ public class MainActivity extends AppCompatActivity implements MapSyncronisation
     @Override
     public void onMapInputDialogSuccessListener(String mapId, String mapPass) {
         Log.i("MAIN ACTIVITY FEEDBACK", "MapId: " + mapId + " MapPass: " + mapPass);
-        mapRecyclerAdapter.addMap(new Map("Flat Map", "brief description", null));
+        MapWrapper mapWrapper = new MapWrapper();
+        Map map = new Map();
+        map.setName("Flat map");
+        mapWrapper.setMap(map);
+
+        //TODO optimise this with a DTO, holding only the contents needed for the list rather than the whole map
+        mapRecyclerAdapter.addMap(mapWrapper);
         checkMapState();
     }
 
     @Override
-    public void mapRecyclerOnItemClick(View view, int position, Map map) {
+    public void mapRecyclerOnItemClick(View view, int position, MapWrapper map) {
         Log.i("MAIN ACTIVITY LIST PRES", "Position: " + position);
         Intent intent = new Intent(this, MapActivity.class);
+
+        //TODO when implementing db send over map wrapper ID and load the map.
         intent.putExtra("map", map);
         startActivity(intent);
     }
 
     @Override
-    public void mapRecyclerOnItemDelete(View view, int position, Map map) {
+    public void mapRecyclerOnItemDelete(View view, int position, MapWrapper map) {
     checkMapState();
     }
 }

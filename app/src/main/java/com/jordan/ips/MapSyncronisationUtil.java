@@ -1,4 +1,4 @@
-package com.example.ips;
+package com.jordan.ips;
 
 public class MapSyncronisationUtil {
 
