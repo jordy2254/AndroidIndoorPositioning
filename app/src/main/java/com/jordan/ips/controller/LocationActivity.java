@@ -1,4 +1,4 @@
-package com.jordan.ips;
+package com.jordan.ips.controller;
 
 import androidx.appcompat.app.AppCompatActivity;
 

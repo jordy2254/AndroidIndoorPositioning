@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.List;
 
 import com.jordan.ips.model.data.Point2d;
-import com.jordan.ips.utils.IndentLocationFinder;
+import com.jordan.ips.model.utils.IndentLocationFinder;
 
 import com.jordan.ips.model.exceptions.InvalidLocationException;
 

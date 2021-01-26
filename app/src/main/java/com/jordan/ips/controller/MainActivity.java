@@ -1,4 +1,4 @@
-package com.jordan.ips;
+package com.jordan.ips.controller;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -15,12 +15,13 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.example.ips.R;
-import com.jordan.ips.mapSyncronisation.MapSyncronisationDialog;
-import com.jordan.ips.mapSyncronisation.MapSyncronisationDialogConfirmListener;
+import com.jordan.ips.model.data.testdata.TestData;
+import com.jordan.ips.view.mapSyncronisation.MapSyncronisationDialog;
+import com.jordan.ips.view.mapSyncronisation.MapSyncronisationDialogConfirmListener;
 
 import com.jordan.ips.model.data.map.persisted.Map;
-import com.jordan.ips.model.data.map.persisted.MapWrapper;
-import com.jordan.ips.recyclerAdapters.MapRecyclerAdapter;
+import com.jordan.ips.model.data.MapWrapper;
+import com.jordan.ips.view.recyclerAdapters.MapRecyclerAdapter;
 
 import java.util.ArrayList;
 
@@ -67,8 +68,8 @@ public class MainActivity extends AppCompatActivity implements MapSyncronisation
             txtNoMapsNotice.setVisibility(View.GONE);
             recyclerView.setVisibility(View.VISIBLE);
         }
-
     }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main_activity, menu);
@@ -91,9 +92,7 @@ public class MainActivity extends AppCompatActivity implements MapSyncronisation
     public void onMapInputDialogSuccessListener(String mapId, String mapPass) {
         Log.i("MAIN ACTIVITY FEEDBACK", "MapId: " + mapId + " MapPass: " + mapPass);
         MapWrapper mapWrapper = new MapWrapper();
-        Map map = new Map();
-        map.setName("Flat map");
-        mapWrapper.setMap(map);
+        mapWrapper.setMap(TestData.getTestMap());
 
         //TODO optimise this with a DTO, holding only the contents needed for the list rather than the whole map
         mapRecyclerAdapter.addMap(mapWrapper);
@@ -106,12 +105,12 @@ public class MainActivity extends AppCompatActivity implements MapSyncronisation
         Intent intent = new Intent(this, MapActivity.class);
 
         //TODO when implementing db send over map wrapper ID and load the map.
-        intent.putExtra("map", map);
+        intent.putExtra(MapActivity.INTENT_MAP, map);
         startActivity(intent);
     }
 
     @Override
     public void mapRecyclerOnItemDelete(View view, int position, MapWrapper map) {
-    checkMapState();
+        checkMapState();
     }
 }

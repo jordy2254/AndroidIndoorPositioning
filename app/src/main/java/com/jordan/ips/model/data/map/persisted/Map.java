@@ -1,6 +1,7 @@
 package com.jordan.ips.model.data.map.persisted;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Map implements Serializable {
@@ -49,5 +50,12 @@ public class Map implements Serializable {
 
     public void setId(long id) {
         this.id = id;
+    }
+
+    public void addBuilding(Building building) {
+        if (buildings == null) {
+            buildings = new ArrayList<>();
+        }
+        this.buildings.add(building);
     }
 }

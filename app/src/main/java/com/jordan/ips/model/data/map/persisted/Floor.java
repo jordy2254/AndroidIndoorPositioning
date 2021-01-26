@@ -14,6 +14,7 @@ public class Floor implements Serializable {
     private String floorname;
     private Point2d location;
     private List<Room> rooms;
+    private List<Sensor> sensors;
 
     public Floor() {
         rooms = new ArrayList<>();
@@ -69,5 +70,12 @@ public class Floor implements Serializable {
 
     public void setLocation(Point2d location) {
         this.location = location;
+    }
+
+    private void addSensor(Sensor sensor){
+        if (sensors == null) {
+            sensors = new ArrayList<>();
+        }
+        sensors.add(sensor);
     }
 }

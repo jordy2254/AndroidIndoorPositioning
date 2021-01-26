@@ -2,6 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.ips">
 
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -9,9 +10,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
-        <activity android:name="com.jordan.ips.MapActivity"></activity>
-        <activity android:name="com.jordan.ips.LocationActivity" />
-        <activity android:name="com.jordan.ips.MainActivity">
+        <activity android:name="com.jordan.ips.controller.MapActivity"></activity>
+        <activity android:name="com.jordan.ips.controller.LocationActivity" />
+        <activity android:name="com.jordan.ips.controller.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

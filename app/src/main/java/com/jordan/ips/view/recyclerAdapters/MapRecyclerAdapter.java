@@ -1,4 +1,4 @@
-package com.jordan.ips.recyclerAdapters;
+package com.jordan.ips.view.recyclerAdapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -12,7 +12,7 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.ips.R;
-import com.jordan.ips.model.data.map.persisted.MapWrapper;
+import com.jordan.ips.model.data.MapWrapper;
 
 import java.text.SimpleDateFormat;
 import java.util.List;

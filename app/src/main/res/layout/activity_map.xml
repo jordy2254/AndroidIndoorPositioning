@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.jordan.ips.MapActivity">
+    tools:context="com.jordan.ips.controller.MapActivity">
 
 
     <androidx.appcompat.widget.Toolbar
@@ -26,7 +26,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/toolbar2">
 
-        <com.jordan.ips.Canvas
+        <com.jordan.ips.view.Canvas
             android:id="@+id/mapCanvas"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

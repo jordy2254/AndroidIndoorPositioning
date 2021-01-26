@@ -1,4 +1,4 @@
-package com.jordan.ips.utils;
+package com.jordan.ips.model.utils;
 
 import com.jordan.ips.model.data.map.persisted.Room;
 

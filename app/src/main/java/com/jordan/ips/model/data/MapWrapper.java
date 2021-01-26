@@ -1,4 +1,6 @@
-package com.jordan.ips.model.data.map.persisted;
+package com.jordan.ips.model.data;
+
+import com.jordan.ips.model.data.map.persisted.Map;
 
 import java.io.Serializable;
 import java.util.Date;

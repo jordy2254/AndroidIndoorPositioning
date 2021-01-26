@@ -1,6 +1,8 @@
 package com.jordan.ips.model.data;
 
-public class Point2d {
+import java.io.Serializable;
+
+public class Point2d implements Serializable {
 
     public double x,y;
 
