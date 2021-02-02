@@ -1,5 +1,7 @@
 package com.jordan.ips.model.data.map.persisted;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -10,6 +12,7 @@ public class Map implements Serializable {
     private String identifier;
     private String password;
     private String name;
+
     private List<Building> buildings;
 
     public String getIdentifier() {

@@ -1,4 +1,4 @@
-package com.jordan.ips.model.data;
+package com.jordan.renderengine.data;
 
 import java.io.Serializable;
 

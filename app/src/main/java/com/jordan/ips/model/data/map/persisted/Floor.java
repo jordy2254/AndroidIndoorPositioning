@@ -1,6 +1,6 @@
 package com.jordan.ips.model.data.map.persisted;
 
-import com.jordan.ips.model.data.Point2d;
+import com.jordan.renderengine.data.Point2d;
 
 import java.io.Serializable;
 import java.util.ArrayList;

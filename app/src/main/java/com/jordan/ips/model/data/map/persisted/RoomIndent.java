@@ -1,6 +1,6 @@
 package com.jordan.ips.model.data.map.persisted;
 
-import com.jordan.ips.model.data.Point2d;
+import com.jordan.renderengine.data.Point2d;
 
 import java.io.Serializable;
 
@@ -12,6 +12,15 @@ public class RoomIndent implements Serializable {
 
     private Point2d dimensions;
     private double location;
+
+
+
+    public RoomIndent(String wallKeyA, String wallKeyB, Point2d dimensions) {
+        this.dimensions = dimensions;
+        this.wallKeyA = wallKeyA;
+        this.wallKeyB = wallKeyB;
+    }
+
 
     public String getWallKeyA() {
         return wallKeyA;

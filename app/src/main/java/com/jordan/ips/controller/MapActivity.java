@@ -8,6 +8,7 @@ import android.os.Bundle;
 import com.example.ips.R;
 import com.jordan.ips.model.data.MapWrapper;
 import com.jordan.ips.view.Canvas;
+import com.jordan.ips.view.renders.RenderView;
 
 public class MapActivity extends AppCompatActivity {
 
@@ -23,6 +24,6 @@ public class MapActivity extends AppCompatActivity {
         MapWrapper map = (MapWrapper) intent.getSerializableExtra(INTENT_MAP);
 
         canvas = findViewById(R.id.mapCanvas);
-        canvas.setMap(map);
+        canvas.setMap(map.getMap());
     }
 }

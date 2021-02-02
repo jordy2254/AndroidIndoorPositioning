@@ -41,7 +41,8 @@ public class MapRecyclerAdapter extends RecyclerView.Adapter<MapRecyclerAdapter.
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         MapWrapper map = mData.get(position);
-        holder.mapName.setText(map.getMap().getName());
+        String mapName = map.getMap() == null ? "unkown" : map.getMap().getName();
+        holder.mapName.setText(mapName);
         holder.mapDescription.setText("Description not yet implemented");
         holder.mapIcon.setImageResource(R.drawable.map);
         if(map.getLastSyncedDate() == null || map.isSyncing()){

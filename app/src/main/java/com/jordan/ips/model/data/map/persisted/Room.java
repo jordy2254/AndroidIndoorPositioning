@@ -3,7 +3,7 @@ package com.jordan.ips.model.data.map.persisted;
 import java.io.Serializable;
 import java.util.List;
 
-import com.jordan.ips.model.data.Point2d;
+import com.jordan.renderengine.data.Point2d;
 import com.jordan.ips.model.utils.IndentLocationFinder;
 
 import com.jordan.ips.model.exceptions.InvalidLocationException;
@@ -18,7 +18,7 @@ public class Room implements Serializable {
     Point2d location;
     Point2d dimensions;
 
-    private List<RoomIndent> roomIndents;
+    private List<RoomIndent> indents;
 
 
     public boolean isPointInRoom(Point2d point){
@@ -29,7 +29,7 @@ public class Room implements Serializable {
         }
 
         //if we're within an indent, we're outside of room bounds
-        for(RoomIndent indent : roomIndents){
+        for(RoomIndent indent : indents){
             try {
                 double[] startLocations = IndentLocationFinder.findStartPointsOfIndent(this, indent, false);
                 if((point.x >= startLocations[0] && point.x <=  startLocations[0]+indent.getDimensions().x && point.y >=  startLocations[1] && point.y <=  startLocations[1]+indent.getDimensions().y)){
@@ -42,16 +42,16 @@ public class Room implements Serializable {
         return true;
     }
 
-    public List<RoomIndent> getRoomIndents() {
-        return roomIndents;
+    public List<RoomIndent> getIndents() {
+        return indents;
     }
 
-    public void setRoomIndents(List<RoomIndent> roomIndents) {
-        this.roomIndents = roomIndents;
+    public void setIndents(List<RoomIndent> indents) {
+        this.indents = indents;
     }
 
     public void addIndent(RoomIndent indent) {
-        roomIndents.add(indent);
+        indents.add(indent);
     }
 
     public String getName() {

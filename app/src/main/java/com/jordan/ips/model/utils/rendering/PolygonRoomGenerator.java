@@ -1,7 +1,7 @@
 package com.jordan.ips.model.utils.rendering;
 
-import com.jordan.ips.model.data.Pair;
-import com.jordan.ips.model.data.Point2d;
+import com.jordan.renderengine.data.Pair;
+import com.jordan.renderengine.data.Point2d;
 import com.jordan.ips.model.data.map.persisted.Room;
 import com.jordan.ips.model.data.map.persisted.RoomIndent;
 import com.jordan.ips.model.exceptions.InvalidLocationException;
@@ -27,7 +27,7 @@ public class PolygonRoomGenerator {
         List<Pair<Point2d,Point2d>> indentEdges = new ArrayList<>();
 
 
-        for(RoomIndent indent : room.getRoomIndents()){
+        for(RoomIndent indent : room.getIndents()){
             try {
                 double[] startLocations = IndentLocationFinder.findStartPointsOfIndent(room, indent, true);
                 indentEdges.addAll(calculateRectangleEdgePairs(startLocations[0], startLocations[1], indent.getDimensions().x, indent.getDimensions().y));
