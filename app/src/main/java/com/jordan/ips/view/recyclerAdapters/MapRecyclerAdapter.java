@@ -1,4 +1,4 @@
-package com.jordan.ips.recyclerAdapters;
+package com.jordan.ips.view.recyclerAdapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -12,7 +12,7 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.ips.R;
-import com.jordan.ips.model.data.map.persisted.MapWrapper;
+import com.jordan.ips.model.data.MapWrapper;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -41,7 +41,8 @@ public class MapRecyclerAdapter extends RecyclerView.Adapter<MapRecyclerAdapter.
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         MapWrapper map = mData.get(position);
-        holder.mapName.setText(map.getMap().getName());
+        String mapName = map.getMap() == null ? "unkown" : map.getMap().getName();
+        holder.mapName.setText(mapName);
         holder.mapDescription.setText("Description not yet implemented");
         holder.mapIcon.setImageResource(R.drawable.map);
         if(map.getLastSyncedDate() == null || map.isSyncing()){

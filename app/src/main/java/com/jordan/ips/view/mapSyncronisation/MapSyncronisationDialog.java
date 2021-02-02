@@ -1,4 +1,4 @@
-package com.jordan.ips.mapSyncronisation;
+package com.jordan.ips.view.mapSyncronisation;
 
 import android.app.AlertDialog;
 import android.app.Dialog;

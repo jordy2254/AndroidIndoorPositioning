@@ -1,6 +1,7 @@
 package com.jordan.ips.model.data.map.persisted;
 
-import com.jordan.ips.model.data.Point2d;
+import com.google.gson.annotations.SerializedName;
+import com.jordan.renderengine.data.Point2d;
 
 import java.io.Serializable;
 import java.util.ArrayList;
