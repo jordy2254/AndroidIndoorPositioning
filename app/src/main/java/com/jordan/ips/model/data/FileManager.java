@@ -51,6 +51,18 @@ public class FileManager {
         }
     }
 
+    public static void deleteWrapper(Context context, MapWrapper wrapper){
+
+        if(!checkAndCreateSaveDir(context)){
+            return;
+        }
+
+        File file = new File(getPathname(context), getFileName(wrapper));
+        if(file.exists()) {
+            file.delete();
+        }
+    }
+
     public static List<MapWrapper> loadMapWrappers(Context context) {
         File dir = new File(getPathname(context));
         if(!dir.exists()){

@@ -124,6 +124,7 @@ public class MainActivity extends AppCompatActivity implements MapSyncronisation
 
             @Override
             public void syncronisationFailed() {
+                mapRecyclerAdapter.removeMap(mapWrapper);
                 mapRecyclerAdapter.notifyDataSetChanged();
             }
         });

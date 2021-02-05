@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.ips.R;
 import com.jordan.ips.model.api.MapSyncronisationUtil;
 import com.jordan.ips.model.api.MapSyncronsiedCallBack;
+import com.jordan.ips.model.data.FileManager;
 import com.jordan.ips.model.data.MapWrapper;
 import com.jordan.ips.model.data.map.persisted.Map;
 
@@ -59,7 +60,7 @@ public class MapRecyclerAdapter extends RecyclerView.Adapter<MapRecyclerAdapter.
             holder.lastSyncDate.setText(dateFormat.format(map.getLastSyncedDate()));
         }
 
-        if(map.getLastSyncedDate() == null || map.isSyncing()){
+        if(map.isSyncing()){
             holder.mapIcon.setVisibility(View.INVISIBLE);
             holder.pb.setVisibility(View.VISIBLE);
         }else{
@@ -90,6 +91,7 @@ public class MapRecyclerAdapter extends RecyclerView.Adapter<MapRecyclerAdapter.
         holder.btnDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                FileManager.deleteWrapper(context, map);
                 mData.remove(map);
                 notifyDataSetChanged();
                 if(mapRecyclerAdapterListeners != null){
@@ -107,6 +109,11 @@ public class MapRecyclerAdapter extends RecyclerView.Adapter<MapRecyclerAdapter.
 
     public void addMap(MapWrapper map) {
         mData.add(map);
+        notifyDataSetChanged();
+    }
+
+    public void removeMap(MapWrapper map) {
+        mData.remove(map);
         notifyDataSetChanged();
     }
 
