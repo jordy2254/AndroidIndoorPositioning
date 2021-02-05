@@ -13,15 +13,17 @@ import java.util.List;
 
 public class Test {
 
+
     ParcelUuid serviceUid = ParcelUuid.fromString("0000feaa-0000-1000-8000-00805f9b34fb");
     BluetoothAdapter mAdapter = BluetoothAdapter.getDefaultAdapter();
 
-    private void test(){
+    public void test(){
         List<ScanFilter> filters = new ArrayList<>();
         filters.add(
                 new ScanFilter.Builder()
                         .setServiceUuid(serviceUid)
                         .build());
+
         ScanSettings settings = new ScanSettings.Builder()
                 .setScanMode(ScanSettings.SCAN_MODE_LOW_LATENCY)
                 .build();

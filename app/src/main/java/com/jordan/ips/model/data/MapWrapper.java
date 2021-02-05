@@ -8,7 +8,7 @@ import java.util.Date;
 public class MapWrapper implements Serializable {
 
     private Map map;
-    private Date lastSyncedDate = new Date();
+    private Date lastSyncedDate;
     private boolean syncing = false;
 
     public Map getMap() {

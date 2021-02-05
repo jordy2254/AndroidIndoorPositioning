@@ -6,25 +6,31 @@ import java.io.Serializable;
 
 public class Sensor implements Serializable {
 
-    private Point2d position;
-    private long floorId;
-    private String sensorId;
+    private String id;
+    private int floorId;
+    private Point2d location;
 
-    public Sensor(Point2d position, long floorId, String sensorId) {
-        this.position = position;
-        this.floorId = floorId;
-        this.sensorId = sensorId;
+    public String getId() {
+        return id;
     }
 
-    public Point2d getPosition() {
-        return position;
+    public void setId(String id) {
+        this.id = id;
     }
 
-    public long getFloorId() {
+    public int getFloorId() {
         return floorId;
     }
 
-    public String getSensorId() {
-        return sensorId;
+    public void setFloorId(int floorId) {
+        this.floorId = floorId;
+    }
+
+    public Point2d getLocation() {
+        return location;
+    }
+
+    public void setLocation(Point2d location) {
+        this.location = location;
     }
 }

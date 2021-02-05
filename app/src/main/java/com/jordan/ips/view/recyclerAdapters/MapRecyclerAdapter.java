@@ -12,9 +12,13 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.ips.R;
+import com.jordan.ips.model.api.MapSyncronisationUtil;
+import com.jordan.ips.model.api.MapSyncronsiedCallBack;
 import com.jordan.ips.model.data.MapWrapper;
+import com.jordan.ips.model.data.map.persisted.Map;
 
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 public class MapRecyclerAdapter extends RecyclerView.Adapter<MapRecyclerAdapter.ViewHolder> {
@@ -22,11 +26,13 @@ public class MapRecyclerAdapter extends RecyclerView.Adapter<MapRecyclerAdapter.
     private List<MapWrapper> mData;
     private LayoutInflater mInflater;
     private MapRecyclerAdapterListeners mapRecyclerAdapterListeners;
+    private Context context;
 
     // data is passed into the constructor
     public MapRecyclerAdapter(Context context, List<MapWrapper> data) {
         this.mInflater = LayoutInflater.from(context);
         this.mData = data;
+        this.context = context;
     }
 
     // inflates the row layout from xml when needed
@@ -37,7 +43,6 @@ public class MapRecyclerAdapter extends RecyclerView.Adapter<MapRecyclerAdapter.
         return new ViewHolder(view);
     }
 
-    // binds the data to the TextView in each row
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         MapWrapper map = mData.get(position);
@@ -45,13 +50,19 @@ public class MapRecyclerAdapter extends RecyclerView.Adapter<MapRecyclerAdapter.
         holder.mapName.setText(mapName);
         holder.mapDescription.setText("Description not yet implemented");
         holder.mapIcon.setImageResource(R.drawable.map);
-        if(map.getLastSyncedDate() == null || map.isSyncing()){
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd@hh:mm");
+
+        if(map.getLastSyncedDate() == null){
             holder.lastSyncDate.setText("Never");
+        }else{
+            holder.lastSyncDate.setText(dateFormat.format(map.getLastSyncedDate()));
+        }
+
+        if(map.getLastSyncedDate() == null || map.isSyncing()){
             holder.mapIcon.setVisibility(View.INVISIBLE);
             holder.pb.setVisibility(View.VISIBLE);
         }else{
-            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
-            holder.lastSyncDate.setText(dateFormat.format(map.getLastSyncedDate()));
             holder.mapIcon.setVisibility(View.VISIBLE);
             holder.pb.setVisibility(View.INVISIBLE);
         }
@@ -59,6 +70,18 @@ public class MapRecyclerAdapter extends RecyclerView.Adapter<MapRecyclerAdapter.
         holder.btnSync.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                MapSyncronisationUtil.syncroniseMapAndUpdateWrapper(map, (int)map.getMap().getId(), map.getMap().getPassword(), context, new MapSyncronsiedCallBack() {
+                    @Override
+                    public void syncronisationComplete(Map m) {
+                        notifyDataSetChanged();
+                    }
+
+                    @Override
+                    public void syncronisationFailed() {
+                        notifyDataSetChanged();
+                    }
+                });
+
                 map.setSyncing(true);
                 notifyDataSetChanged();
             }

@@ -18,6 +18,7 @@ import android.widget.Toast;
 import com.example.ips.R;
 import com.jordan.ips.model.api.MapSyncronisationUtil;
 import com.jordan.ips.model.api.MapSyncronsiedCallBack;
+import com.jordan.ips.model.data.FileManager;
 import com.jordan.ips.view.mapSyncronisation.MapSyncronisationDialog;
 import com.jordan.ips.view.mapSyncronisation.MapSyncronisationDialogConfirmListener;
 
@@ -27,6 +28,7 @@ import com.jordan.ips.view.recyclerAdapters.MapRecyclerAdapter;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements MapSyncronisationDialogConfirmListener, MapRecyclerAdapter.MapRecyclerAdapterListeners {
 
@@ -59,8 +61,13 @@ public class MainActivity extends AppCompatActivity implements MapSyncronisation
 
         recyclerView.setAdapter(mapRecyclerAdapter);
         mapRecyclerAdapter.setMapRecyclerAdapterListeners(this);
-
+        List<MapWrapper> wrappers = FileManager.loadMapWrappers(this.getApplicationContext());
+        for(MapWrapper wrapper : wrappers){
+            mapRecyclerAdapter.addMap(wrapper);
+        }
         checkMapState();
+//        Intent intent = new Intent(this, BeaconScanningActivity.class);
+//        startActivity(intent);
     }
 
     public void checkMapState(){
@@ -93,28 +100,32 @@ public class MainActivity extends AppCompatActivity implements MapSyncronisation
 
     @Override
     public void onMapInputDialogSuccessListener(String mapId, String mapPass) {
-        Log.i("MAIN ACTIVITY FEEDBACK", "MapId: " + mapId + " MapPass: " + mapPass);
+        if(mapId == null || mapId.isEmpty()){
+            Toast.makeText(getApplicationContext(), "Map Id must be filled in", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        int mapIdParsed = 0;
+        try {
+            mapIdParsed = Integer.parseInt(mapId);
+        }catch (NumberFormatException e){
+            Toast.makeText(getApplicationContext(), "Map Id's contain number's only", Toast.LENGTH_SHORT).show();
+            return;
+        }
 
         MapWrapper mapWrapper = new MapWrapper();
         mapWrapper.setSyncing(true);
 
 
-        MapSyncronisationUtil.syncroniseMap(Integer.parseInt(mapId), mapPass, this.getApplicationContext(), new MapSyncronsiedCallBack() {
+        MapSyncronisationUtil.syncroniseMapAndUpdateWrapper(mapWrapper,mapIdParsed, mapPass, this.getApplicationContext(), new MapSyncronsiedCallBack() {
             @Override
             public void syncronisationComplete(Map map) {
-               mapWrapper.setMap(map);
-               mapWrapper.setLastSyncedDate(new Date());
-               mapWrapper.setSyncing(false);
                mapRecyclerAdapter.notifyDataSetChanged();
             }
 
             @Override
             public void syncronisationFailed() {
-                Toast.makeText(getApplicationContext(), "Failed to syncronize map", Toast.LENGTH_SHORT).show();
-                mapWrapper.setSyncing(false);
                 mapRecyclerAdapter.notifyDataSetChanged();
             }
-
         });
 
         //TODO optimise this with a DTO, holding only the contents needed for the list rather than the whole map
@@ -126,7 +137,10 @@ public class MainActivity extends AppCompatActivity implements MapSyncronisation
     public void mapRecyclerOnItemClick(View view, int position, MapWrapper map) {
         Log.i("MAIN ACTIVITY LIST PRES", "Position: " + position);
         Intent intent = new Intent(this, MapActivity.class);
-
+        if(map.getMap() == null){
+            Toast.makeText(getApplicationContext(), "This map hasn't successfully synced yet", Toast.LENGTH_SHORT).show();
+            return;
+        }
         //TODO when implementing db send over map wrapper ID and load the map.
         intent.putExtra(MapActivity.INTENT_MAP, map);
         startActivity(intent);

@@ -78,4 +78,8 @@ public class Floor implements Serializable {
         }
         sensors.add(sensor);
     }
+
+    public List<Sensor> getSensors() {
+        return sensors;
+    }
 }
