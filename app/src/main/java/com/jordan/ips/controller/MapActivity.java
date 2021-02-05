@@ -20,6 +20,8 @@ public class MapActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
+        setSupportActionBar(null);
+
        Intent intent = getIntent();
         MapWrapper map = (MapWrapper) intent.getSerializableExtra(INTENT_MAP);
 
