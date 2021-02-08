@@ -67,87 +67,6 @@ public class Screen {
         drawLine(x0, y0, x1, y1, 1, color);
     }
 
-    public void fill(int x, int y, int color){
-        if(!validateDrawBounds(x, y)){
-            return;
-        }
-
-        int initialColor = pixels[x + y * width];
-        fillRecursive(x,y,initialColor, color);
-    }
-
-    public void fillNonRecursive(int x, int y, int color){
-        if(!validateDrawBounds(x, y)){
-            return;
-        }
-        int initialColor = pixels[x + y * width];
-
-        List<Point2i> locations = new ArrayList<>();
-        List<Point2i> visited = new ArrayList<>();
-        locations.add(new Point2i(x,y));
-
-        Function<Point2i, Boolean> validatePoint = (Point2i p)->{
-            return validateDrawBounds(p.x, p.y) &&
-                    pixels[p.x + p.y * width] == initialColor &&
-                    !visited.contains(p) &&
-                    !locations.contains(p);
-        };
-
-        while(!locations.isEmpty()){
-            Point2i currentPoint = locations.get(0);
-            visited.add(currentPoint);
-            locations.remove(0);
-            pixels[currentPoint.x + currentPoint.y * width] = color;
-            Point2i p1 = new Point2i(currentPoint.x + 1, currentPoint.y);
-            Point2i p2 = new Point2i(currentPoint.x -1, currentPoint.y);
-
-            if(validatePoint.apply(p1)){
-                locations.add(p1);
-            }
-
-            if(validatePoint.apply(p2)){
-                locations.add(p2);
-            }
-
-            for (int y2 = -1; y2 <= 1; y2++) {
-                if(y2 == 0){
-                    continue;
-                }
-                int dx = currentPoint.x;
-                int dy = currentPoint.y + y2;
-                Point2i np = new Point2i(dx, dy);
-                if(validatePoint.apply(np)){
-                    locations.add(np);
-                }
-            }
-        }
-    }
-
-    private void fillRecursive(int x, int y, int initialColor, int newColor){
-        if(!validateDrawBounds(x, y)){
-            return;
-        }
-
-        if(pixels[x + y * width] != initialColor){
-            return;
-        }
-        pixels[x + y * width] = newColor;
-
-        for (int xp = -1; xp <= 1; xp++) {
-            for (int yp = -1; yp <= 1; yp++) {
-                int index = (xp + 1) + (yp + 1) * 3;
-
-                if (FILL_MASK[index]) {
-                    int dx = x + xp;
-                    int dy = y + yp;
-                    if (validateDrawBounds(dx, dy)) {
-                        fillRecursive(dx, dy, initialColor, newColor);
-                    }
-                }
-            }
-        }
-    }
-
     public void drawLine(int x1, int y1, int x2, int y2, int lineThickness, int color){
        //https://www.javatpoint.com/computer-graphics-bresenhams-line-algorithm
         //http://rosettacode.org/wiki/Bitmap/Bresenham%27s_line_algorithm#Java
@@ -379,7 +298,14 @@ public class Screen {
             for (int i = 0; i < globalEdgeIndexes.size(); i++) {
                 Double[] data = allEdgeTable.get(globalEdgeIndexes.get(i));
                 if(data[minYIndex].intValue() == scanlineStart){
-                    activeEdgeTable.add(new Double[]{data[maxYIndex], data[xValIndex], 1/data[slopeIndex]});
+                    int index = 0;
+                    for (Double[] d : activeEdgeTable) {
+                        if(d[xValIndexActive] > data[xValIndex]){
+                            break;
+                        }
+                        index++;
+                    }
+                    activeEdgeTable.add(index, new Double[]{data[maxYIndex], data[xValIndex], 1/data[slopeIndex]});
                 }
             }
         }
