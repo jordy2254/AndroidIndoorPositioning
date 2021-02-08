@@ -311,9 +311,6 @@ public class Screen {
             }
         }
 
-
-
-        int parity = 0;
         int scanlineStart = allEdgeTable.get(globalEdgeIndexes.get(0))[minYIndex].intValue();
         if(scanlineStart > height){
             return;

@@ -31,7 +31,9 @@ public class RenderableRoom implements Renderable {
     public void render(Screen screen, Point2d offset, double scale) {
 //        if(!room.getName().equals("Bathroom")){
 //            return;
-//        }
+////        }
+//        if(room.getId() != 1) return;
+
         calculateWalls();
         List<Point2d> polygon = createPolygon((int)offset.x, (int)offset.y, scale);
 //        screen.fillNonRecursive(0,0, 0xff00ff);
@@ -93,16 +95,30 @@ public class RenderableRoom implements Renderable {
             System.err.println("Room: " + room.getName() + "is invalid");
             return null;
         }
+
+//        if(room.getId() == 1)
+//            room.setRotation(Math.toRadians(5));
+
+//        for (Point2d point : p) {
+//            Point2d origin = new Point2d(room.getDimensions().x / 2, room.getDimensions().y / 2);
+//            double cos = Math.cos(room.getRotation());
+//            double sin = Math.sin(room.getRotation());
+//
+//            // translate point back to origin:
+//            point.x -= origin.x;
+//            point.y -= origin.y;
+//
+//            // rotate point
+//            double xnew = point.x * cos - point.y * sin;
+//            double ynew = point.x * sin + point.y * cos;
+//
+//            // translate point back:
+//            point.x = xnew + origin.x;
+//            point.y = ynew + origin.y;
+//        }
         for(Point2d point : p){
             point.x += room.getLocation().x * scale;
             point.y += room.getLocation().y * scale;
-        }
-        for (Point2d point : p) {
-            Point2d origin = new Point2d(room.getDimensions().x / 2, room.getDimensions().y / 2);
-            double cos = Math.cos(room.getRotation());
-            double sin = Math.sin(room.getRotation());
-            point.x = cos * (point.x - origin.x) - sin * (point.y - origin.y) + origin.x;
-            point.y = sin * (point.x - origin.x) + cos * (point.y - origin.y) + origin.y;
         }
 //        p.translate((int)(room.getxLocation() * scale), (int)(room.getyLocation() * scale));
         return p;
