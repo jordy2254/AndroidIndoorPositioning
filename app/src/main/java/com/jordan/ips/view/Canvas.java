@@ -1,5 +1,6 @@
 package com.jordan.ips.view;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -10,24 +11,24 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 
 import androidx.annotation.Nullable;
 
 import com.jordan.ips.model.data.map.persisted.Building;
-import com.jordan.ips.model.data.map.persisted.Floor;
+import com.jordan.ips.model.locationTracking.Test;
 import com.jordan.ips.view.renderable.RenderableBuilding;
-import com.jordan.ips.view.renderable.RenderableFloor;
 import com.jordan.renderengine.data.Point2d;
 import com.jordan.ips.model.data.map.persisted.Map;
 import com.jordan.ips.view.renders.RenderView;
 import com.jordan.renderengine.Screen;
+import com.jordan.renderengine.graphics.Drawable;
 import com.jordan.renderengine.graphics.Renderable;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
-public class Canvas extends RenderView implements View.OnTouchListener, View.OnClickListener, ScaleGestureDetector.OnScaleGestureListener{
+public class Canvas extends RenderView implements View.OnTouchListener, ScaleGestureDetector.OnScaleGestureListener{
 
     Screen screen = Screen.getInstance();
     private Map map;
@@ -46,6 +47,8 @@ public class Canvas extends RenderView implements View.OnTouchListener, View.OnC
 
     Bitmap renderOuput;
     List<Renderable> renderables = new ArrayList<>();
+
+    List<Drawable> drawables = new ArrayList<>();
 
     public Canvas(Context context) {
         super(context);
@@ -103,9 +106,22 @@ public class Canvas extends RenderView implements View.OnTouchListener, View.OnC
         paint.setColor(Color.BLACK);
         paint.setTextSize(30);
         paint.setColor(Color.WHITE);
-        canvas.drawRect(new Rect(0,80,240,130), paint);
+        canvas.drawRect(new Rect(0,150,250,225), paint);
         paint.setColor(Color.BLACK);
-        canvas.drawText("FPS | UPS " + fpsUP1 + " | " + upsUp1, 10,125, paint);
+        canvas.drawText("FPS | UPS " + fpsUP1 + " | " + upsUp1, 10,200, paint);
+        for (Drawable d: drawables) {
+            d.draw(canvas, new Point2d(xOff, yOff), scale);
+        }
+    }
+
+    @Override
+    protected void secondTimer() {
+        java.util.Map<String, Integer[]> sensors = Test.sensorData;
+        for (String key : sensors.keySet()) {
+            double distance = Test.calculateDistanceInCm(key);
+
+            Log.i("Distance", String.format("Sensor: %s, Distance: " + distance, key));
+        }
     }
 
 
@@ -116,23 +132,22 @@ public class Canvas extends RenderView implements View.OnTouchListener, View.OnC
         r.setFloor(building.getFloors().get(0));
 
         this.renderables.add(r);
+        this.drawables.add(r);
     }
 
 
     public void init(Context context){
-        setOnClickListener(this);
         setOnTouchListener(this);
+        setFocusable(true);
         mScaleDetector = new ScaleGestureDetector(context, this);
     }
 
     @Override
-    public void onClick(View v) {
-        Log.i("Canvas", "Clicked");
-    }
-
-    @Override
     public boolean onTouch(View v, MotionEvent event) {
-
+        if(requestFocusFromTouch()){
+            InputMethodManager ims = (InputMethodManager) getContext().getSystemService(Activity.INPUT_METHOD_SERVICE);
+            ims.hideSoftInputFromWindow(getWindowToken(), 0);
+        }
         mScaleDetector.onTouchEvent(event);
         if(scaling){
             return true;

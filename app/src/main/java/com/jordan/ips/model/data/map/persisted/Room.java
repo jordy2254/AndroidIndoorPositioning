@@ -13,6 +13,7 @@ public class Room implements Serializable {
 
     long id;
     long floorId;
+    double rotation;
     private String name;
 
     Point2d location;
@@ -92,5 +93,13 @@ public class Room implements Serializable {
 
     public void setDimensions(Point2d dimensions) {
         this.dimensions = dimensions;
+    }
+
+    public double getRotation() {
+        return rotation;
+    }
+
+    public void setRotation(double rotation) {
+        this.rotation = rotation;
     }
 }

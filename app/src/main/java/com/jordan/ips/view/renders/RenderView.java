@@ -33,7 +33,6 @@ public abstract class RenderView extends SurfaceView implements Runnable, Surfac
         getHolder().addCallback(this);
     }
 
-
     public RenderView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         getHolder().addCallback(this);
@@ -87,9 +86,12 @@ public abstract class RenderView extends SurfaceView implements Runnable, Surfac
                 upsUp1 = ups;
                 fps = 0;
                 ups = 0;
+                secondTimer();
             }
         }
     }
+
+    protected abstract void secondTimer();
 
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
@@ -106,7 +108,6 @@ public abstract class RenderView extends SurfaceView implements Runnable, Surfac
         if(running){
             return;
         }
-        //TODO
         if (thread == null) {
             thread = new Thread(this, "Render thread");
         }
@@ -121,6 +122,7 @@ public abstract class RenderView extends SurfaceView implements Runnable, Surfac
         try {
             running = false;
             thread.join();
+            thread = null;
             Log.d("Render Engine", "Stopped thread");
         } catch (InterruptedException e) {
             e.printStackTrace();

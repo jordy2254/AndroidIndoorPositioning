@@ -1,12 +1,19 @@
 package com.jordan.ips.controller;
 
+import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.Manifest;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -15,7 +22,7 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.ips.R;
+import com.jordan.ips.R;
 import com.jordan.ips.model.api.MapSyncronisationUtil;
 import com.jordan.ips.model.api.MapSyncronsiedCallBack;
 import com.jordan.ips.model.data.FileManager;
@@ -68,7 +75,9 @@ public class MainActivity extends AppCompatActivity implements MapSyncronisation
         checkMapState();
 //        Intent intent = new Intent(this, BeaconScanningActivity.class);
 //        startActivity(intent);
+
     }
+
 
     public void checkMapState(){
         if(mapRecyclerAdapter.getmData().size() == 0){

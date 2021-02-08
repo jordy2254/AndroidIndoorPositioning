@@ -11,7 +11,7 @@ import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.ips.R;
+import com.jordan.ips.R;
 import com.jordan.ips.model.api.MapSyncronisationUtil;
 import com.jordan.ips.model.api.MapSyncronsiedCallBack;
 import com.jordan.ips.model.data.FileManager;

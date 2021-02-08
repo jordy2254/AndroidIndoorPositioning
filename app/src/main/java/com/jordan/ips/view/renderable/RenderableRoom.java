@@ -97,6 +97,13 @@ public class RenderableRoom implements Renderable {
             point.x += room.getLocation().x * scale;
             point.y += room.getLocation().y * scale;
         }
+        for (Point2d point : p) {
+            Point2d origin = new Point2d(room.getDimensions().x / 2, room.getDimensions().y / 2);
+            double cos = Math.cos(room.getRotation());
+            double sin = Math.sin(room.getRotation());
+            point.x = cos * (point.x - origin.x) - sin * (point.y - origin.y) + origin.x;
+            point.y = sin * (point.x - origin.x) + cos * (point.y - origin.y) + origin.y;
+        }
 //        p.translate((int)(room.getxLocation() * scale), (int)(room.getyLocation() * scale));
         return p;
     }

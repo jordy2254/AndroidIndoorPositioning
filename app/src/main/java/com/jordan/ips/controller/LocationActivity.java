@@ -4,7 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 
-import com.example.ips.R;
+import com.jordan.ips.R;
 
 public class LocationActivity extends AppCompatActivity {
 
