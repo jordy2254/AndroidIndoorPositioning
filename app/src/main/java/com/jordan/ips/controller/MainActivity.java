@@ -1,19 +1,12 @@
 package com.jordan.ips.controller;
 
-import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.Manifest;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -32,12 +25,12 @@ import com.jordan.ips.view.mapSyncronisation.MapSyncronisationDialogConfirmListe
 import com.jordan.ips.model.data.map.persisted.Map;
 import com.jordan.ips.model.data.MapWrapper;
 import com.jordan.ips.view.recyclerAdapters.MapRecyclerAdapter;
+import com.jordan.ips.view.recyclerAdapters.listeners.MapRecyclerAdapterListener;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements MapSyncronisationDialogConfirmListener, MapRecyclerAdapter.MapRecyclerAdapterListeners {
+public class MainActivity extends AppCompatActivity implements MapSyncronisationDialogConfirmListener, MapRecyclerAdapterListener {
 
     MapRecyclerAdapter mapRecyclerAdapter;
     MapSyncronisationDialog input;
@@ -70,7 +63,7 @@ public class MainActivity extends AppCompatActivity implements MapSyncronisation
         mapRecyclerAdapter.setMapRecyclerAdapterListeners(this);
         List<MapWrapper> wrappers = FileManager.loadMapWrappers(this.getApplicationContext());
         for(MapWrapper wrapper : wrappers){
-            mapRecyclerAdapter.addMap(wrapper);
+            mapRecyclerAdapter.add(wrapper);
         }
         checkMapState();
 //        Intent intent = new Intent(this, BeaconScanningActivity.class);
@@ -80,7 +73,7 @@ public class MainActivity extends AppCompatActivity implements MapSyncronisation
 
 
     public void checkMapState(){
-        if(mapRecyclerAdapter.getmData().size() == 0){
+        if(mapRecyclerAdapter.getData().size() == 0){
             txtNoMapsNotice.setVisibility(View.VISIBLE);
             recyclerView.setVisibility(View.GONE);
         }else{
@@ -133,13 +126,13 @@ public class MainActivity extends AppCompatActivity implements MapSyncronisation
 
             @Override
             public void syncronisationFailed() {
-                mapRecyclerAdapter.removeMap(mapWrapper);
+                mapRecyclerAdapter.remove(mapWrapper);
                 mapRecyclerAdapter.notifyDataSetChanged();
             }
         });
 
         //TODO optimise this with a DTO, holding only the contents needed for the list rather than the whole map
-        mapRecyclerAdapter.addMap(mapWrapper);
+        mapRecyclerAdapter.add(mapWrapper);
         checkMapState();
     }
 

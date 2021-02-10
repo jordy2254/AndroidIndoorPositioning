@@ -22,6 +22,9 @@ public class Room implements Serializable {
     private List<RoomIndent> indents;
 
 
+    private transient boolean selected = false;
+
+
     public boolean isPointInRoom(Point2d point){
 
         //if we're not in initial wall bounds
@@ -101,5 +104,13 @@ public class Room implements Serializable {
 
     public void setRotation(double rotation) {
         this.rotation = rotation;
+    }
+
+    public boolean isSelected() {
+        return selected;
+    }
+
+    public void setSelected(boolean selected) {
+        this.selected = selected;
     }
 }

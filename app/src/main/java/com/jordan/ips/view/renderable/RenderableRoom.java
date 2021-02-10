@@ -37,8 +37,11 @@ public class RenderableRoom implements Renderable {
         calculateWalls();
         List<Point2d> polygon = createPolygon((int)offset.x, (int)offset.y, scale);
 //        screen.fillNonRecursive(0,0, 0xff00ff);
-
-        screen.drawPolygonUpdated(polygon, 2, 0x0, 0xf0ae5d, true);
+        int color = 0xf0ae5d;
+        if(room.isSelected()){
+            color = 0xff00ff;
+        }
+        screen.drawPolygonUpdated(polygon, 2, 0x0, color, true);
         screen.drawPolygon(polygon, 2, 0x0, true);
     }
 //    @Override
