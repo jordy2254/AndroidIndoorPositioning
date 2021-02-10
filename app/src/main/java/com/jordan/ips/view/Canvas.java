@@ -19,7 +19,7 @@ import com.jordan.ips.model.locationTracking.BluetoothScanner;
 import com.jordan.ips.view.renderable.RenderableBuilding;
 import com.jordan.renderengine.data.Point2d;
 import com.jordan.ips.model.data.map.persisted.Map;
-import com.jordan.ips.view.renders.RenderView;
+import com.jordan.renderengine.android.RenderView;
 import com.jordan.renderengine.Screen;
 import com.jordan.renderengine.graphics.Drawable;
 import com.jordan.renderengine.graphics.Renderable;

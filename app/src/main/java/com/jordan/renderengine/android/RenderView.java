@@ -1,4 +1,4 @@
-package com.jordan.ips.view.renders;
+package com.jordan.renderengine.android;
 
 import android.app.Activity;
 import android.content.Context;
