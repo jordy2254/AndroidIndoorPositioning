@@ -13,7 +13,7 @@ import android.widget.EditText;
 import com.jordan.ips.R;
 import com.jordan.ips.model.data.MapWrapper;
 import com.jordan.ips.model.data.map.persisted.Room;
-import com.jordan.ips.model.locationTracking.Test;
+import com.jordan.ips.model.locationTracking.BluetoothScanner;
 import com.jordan.ips.view.Canvas;
 
 import java.util.Optional;
@@ -58,7 +58,7 @@ public class MapActivity extends AppCompatActivity {
         new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        Test.test();
+                        BluetoothScanner.test();
                     }
                 }, "Sensor Thread").start();
     }

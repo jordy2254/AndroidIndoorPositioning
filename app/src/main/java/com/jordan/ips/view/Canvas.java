@@ -1,6 +1,5 @@
 package com.jordan.ips.view;
 
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -11,13 +10,12 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 
 import androidx.annotation.Nullable;
 
 import com.jordan.ips.model.data.map.persisted.Building;
 import com.jordan.ips.model.data.pathfinding.persisted.PathNode;
-import com.jordan.ips.model.locationTracking.Test;
+import com.jordan.ips.model.locationTracking.BluetoothScanner;
 import com.jordan.ips.view.renderable.RenderableBuilding;
 import com.jordan.renderengine.data.Point2d;
 import com.jordan.ips.model.data.map.persisted.Map;
@@ -153,9 +151,9 @@ public class Canvas extends RenderView implements View.OnTouchListener, ScaleGes
 
     @Override
     protected void secondTimer() {
-        java.util.Map<String, Integer[]> sensors = Test.sensorData;
+        java.util.Map<String, Integer[]> sensors = BluetoothScanner.sensorData;
         for (String key : sensors.keySet()) {
-            double distance = Test.calculateDistanceInCm(key);
+            double distance = BluetoothScanner.calculateDistanceInCm(key);
 
             Log.i("Distance", String.format("Sensor: %s, Distance: " + distance, key));
         }

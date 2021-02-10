@@ -7,7 +7,7 @@ import android.graphics.Paint;
 import com.jordan.ips.model.data.map.persisted.Floor;
 import com.jordan.ips.model.data.map.persisted.Room;
 import com.jordan.ips.model.data.map.persisted.Sensor;
-import com.jordan.ips.model.locationTracking.Test;
+import com.jordan.ips.model.locationTracking.BluetoothScanner;
 import com.jordan.renderengine.Screen;
 import com.jordan.renderengine.data.Point2d;
 import com.jordan.renderengine.graphics.Drawable;
@@ -50,7 +50,7 @@ public class RenderableFloor  implements Renderable, Drawable {
         paint.setTextSize(24);
         for(Sensor sensor : floor.getSensors()){
             sensor.setId("0e67470442d01406d584");
-            double distance = Test.calculateDistanceInCm(sensor.getId());
+            double distance = BluetoothScanner.calculateDistanceInCm(sensor.getId());
             if(distance == Double.POSITIVE_INFINITY){
                 continue;
             }

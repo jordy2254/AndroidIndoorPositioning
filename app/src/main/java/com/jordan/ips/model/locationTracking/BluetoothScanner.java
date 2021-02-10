@@ -25,7 +25,7 @@ import java.util.Map;
 
 import static androidx.core.app.ActivityCompat.requestPermissions;
 
-public class Test {
+public class BluetoothScanner {
 
 
     static final ParcelUuid serviceUid = ParcelUuid.fromString("0000FEAA-0000-1000-8000-00805F9B34FB");
