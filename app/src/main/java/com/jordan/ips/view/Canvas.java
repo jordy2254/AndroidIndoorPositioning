@@ -27,6 +27,7 @@ import com.jordan.renderengine.graphics.Drawable;
 import com.jordan.renderengine.graphics.Renderable;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class Canvas extends RenderView implements View.OnTouchListener, ScaleGestureDetector.OnScaleGestureListener{
@@ -75,6 +76,41 @@ public class Canvas extends RenderView implements View.OnTouchListener, ScaleGes
         for(Renderable r : renderables){
             r.render(screen, new Point2d(xOff, yOff), scale);
         }
+
+        List<PathNode> flattenedNodes = map.getPathRoot().flattenNodes();
+
+        for(PathNode n : map.getPathRoot().flattenNodes()){
+            int size = 10;
+            int dx = (int)((n.getLocation().x * scale) + xOff - (size / 2));
+            int dy = (int)((n.getLocation().y * scale) + yOff - (size / 2));
+            screen.renderRect(dx, dy, size, size, 0xffeeff);
+        }
+
+
+        //draw our path points
+        List<PathNode> nonComplete = new ArrayList<>(Arrays.asList(map.getPathRoot()));
+        List<PathNode> complete = new ArrayList<>();
+
+        while(!nonComplete.isEmpty()){
+            PathNode node = nonComplete.get(0);
+            if(node.getChildNodes() != null){
+                for(PathNode child : node.getChildNodes()){
+
+                    int dx = (int)((node.getLocation().x * scale) + xOff);
+                    int dy = (int)((node.getLocation().y * scale) + yOff);
+                    int dx1 = (int)((child.getLocation().x * scale) + xOff);
+                    int dy1 = (int)((child.getLocation().y * scale) + yOff);
+                    screen.drawLine(dx, dy, dx1, dy1, 3, 0xfefefe);
+                    if(!complete.contains(child) && !nonComplete.contains(child)){
+                        nonComplete.add(child);
+                    }
+                }
+            }
+
+            nonComplete.remove(node);
+            complete.add(node);
+        }
+
 //        screen.renderRect((int)xOff, (int)yOff, (int) (100 * scale), (int) (100 * scale), 0xff0e0e);
 //        int xPos = 100, yPos = 100, size = 100;
 //        List<Point2d> points = Arrays.asList(
@@ -112,9 +148,6 @@ public class Canvas extends RenderView implements View.OnTouchListener, ScaleGes
         canvas.drawText("FPS | UPS " + fpsUP1 + " | " + upsUp1, 10,200, paint);
         for (Drawable d: drawables) {
             d.draw(canvas, new Point2d(xOff, yOff), scale);
-        }
-        for(PathNode n : map.getPathRoot().flattenNodes()){
-            canvas.drawCircle(((int) n.getLocation().x), ((int) n.getLocation().y), 10, paint);
         }
     }
 
