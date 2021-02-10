@@ -1,9 +1,13 @@
 package com.jordan.ips.model.data;
 
 import com.jordan.ips.model.data.map.persisted.Map;
+import com.jordan.ips.model.data.map.persisted.Room;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class MapWrapper implements Serializable {
 
@@ -34,4 +38,14 @@ public class MapWrapper implements Serializable {
     public void setSyncing(boolean syncing) {
         this.syncing = syncing;
     }
+
+    public Optional<Room> findRoomById(long roomId) {
+       return map.getBuildings().stream()
+                .flatMap(building -> building.getFloors().stream())
+                .flatMap(floor -> floor.getRooms().stream())
+                .filter(room -> room.getId() == roomId)
+                .findFirst();
+    }
+
+
 }

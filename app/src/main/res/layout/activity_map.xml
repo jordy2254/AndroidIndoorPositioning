@@ -28,9 +28,12 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
-
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
             <EditText
-                android:id="@+id/txtSearch"
+                android:id="@+id/txtTarget"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
@@ -42,13 +45,15 @@
                 android:hint="Search Location"
                 android:inputType="text"
                 android:padding="25px" />
+        </LinearLayout>
+
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/lstResults"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/white"
-                android:visibility="visible"
+                android:visibility="gone"
                 tools:itemCount="8"
                 tools:listitem="@layout/recycler_view_item" />
         </LinearLayout>
@@ -62,12 +67,13 @@
         android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent">
 
+
         <Button
-            android:id="@+id/button"
+            android:id="@+id/btnDirections"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Button" />
+            android:text="Directions" />
 
         <TextView
             android:id="@+id/textView2"

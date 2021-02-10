@@ -1,13 +1,11 @@
 package com.jordan.ips.controller;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
@@ -17,25 +15,19 @@ import com.jordan.ips.model.data.MapWrapper;
 import com.jordan.ips.model.data.map.persisted.Room;
 import com.jordan.ips.model.locationTracking.Test;
 import com.jordan.ips.view.Canvas;
-import com.jordan.ips.view.recyclerAdapters.BaseRecycler;
-import com.jordan.ips.view.recyclerAdapters.SearchResultRecyclerAdapter;
-import com.jordan.ips.view.recyclerAdapters.listeners.SearchResultRecyclerListener;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Optional;
 
 public class MapActivity extends AppCompatActivity {
 
     public static final String INTENT_MAP = "MAP";
+    public static final int TARGET_SEARCH = 1;
 
     Canvas canvas;
 
-    EditText txtSearch;
-    RecyclerView lstResults;
-    SearchResultRecyclerAdapter searchResultRecyclerAdapter;
-    SearchResultRecyclerListener searchResultRecyclerListener;
+    EditText txtTarget;
 
+    MapWrapper map;
     Room selectedRoom = null;
 
     @Override
@@ -45,67 +37,23 @@ public class MapActivity extends AppCompatActivity {
         setSupportActionBar(null);
 
         Intent intent = getIntent();
-        MapWrapper map = (MapWrapper) intent.getSerializableExtra(INTENT_MAP);
+        map = (MapWrapper) intent.getSerializableExtra(INTENT_MAP);
 
-        searchResultRecyclerAdapter = new SearchResultRecyclerAdapter(this, new ArrayList<>());
+        txtTarget = findViewById(R.id.txtTarget);
+        txtTarget.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if(hasFocus){
+                    Intent i = new Intent(getApplicationContext(), LocationSearchActivity.class);
+                    i.putExtra(INTENT_MAP, map);
 
+                    startActivityForResult(i, TARGET_SEARCH);
+                }
+            }
+        });
         canvas = findViewById(R.id.mapCanvas);
         canvas.setMap(map.getMap());
 
-        searchResultRecyclerListener = new SearchResultRecyclerListener() {
-            @Override
-            public void selected(Room room) {
-                if(selectedRoom != null){
-                    selectedRoom.setSelected(false);
-                }
-                selectedRoom = room;
-                selectedRoom.setSelected(true);
-                canvas.requestFocusFromTouch();
-            }
-        };
-
-        searchResultRecyclerAdapter.setSearchResultRecyclerListener(searchResultRecyclerListener);
-        lstResults = findViewById(R.id.lstResults);
-
-        lstResults.setLayoutManager(new LinearLayoutManager(this));
-        lstResults.setAdapter(searchResultRecyclerAdapter);
-
-        txtSearch = findViewById(R.id.txtSearch);
-        txtSearch.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                lstResults.setVisibility(hasFocus ? View.VISIBLE : View.GONE);
-            }
-        });
-
-        txtSearch.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if(s.length() == 0){
-                    searchResultRecyclerAdapter.setData(new ArrayList<>());
-                    return;
-                }
-                Log.i("Search", "Found: ");
-                List<Room> results = map.getMap().getBuildings()
-                        .stream().flatMap(building -> building.getFloors().stream())
-                        .flatMap(floor -> floor.getRooms().stream())
-                        .filter(room -> room.getName().toLowerCase().contains(s))
-                .collect(Collectors.toList());
-
-                searchResultRecyclerAdapter.setData(results);
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
-            }
-        });
 
         new Thread(new Runnable() {
                     @Override
@@ -113,5 +61,35 @@ public class MapActivity extends AppCompatActivity {
                         Test.test();
                     }
                 }, "Sensor Thread").start();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(resultCode != Activity.RESULT_OK){
+            return;
+        }
+        switch (requestCode){
+            case TARGET_SEARCH:
+                Room selRoom = (Room) data.getSerializableExtra(LocationSearchActivity.EXTRA_RESULT);
+                long selectedId = selRoom.getId();
+
+                Optional<Room> room = map.findRoomById(selectedId);
+                if(!room.isPresent()){
+                    Log.e("Search", "Room with id not found on map: " + selectedId);
+                    return;
+                }
+                if(this.selectedRoom != null){
+                    this.selectedRoom.setSelected(false);
+                }
+                room.get().setSelected(true);
+                this.selectedRoom = room.get();
+                txtTarget.setText(room.get().getName());
+                canvas.requestFocusFromTouch();
+                break;
+            default:
+                Log.w("SEARCH", "No handler for request code: " + requestCode);
+        }
     }
 }
