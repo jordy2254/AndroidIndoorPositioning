@@ -1,5 +1,6 @@
 package com.jordan.ips.view.renders;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -7,6 +8,8 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -14,7 +17,7 @@ import androidx.annotation.Nullable;
 import com.jordan.ips.model.data.map.persisted.Map;
 import com.jordan.renderengine.Screen;
 
-public abstract class RenderView extends SurfaceView implements Runnable, SurfaceHolder.Callback {
+public abstract class RenderView extends SurfaceView implements Runnable, SurfaceHolder.Callback, View.OnFocusChangeListener {
 
     private static final int fpsLOCK = 30;
     private Thread thread;
@@ -26,16 +29,16 @@ public abstract class RenderView extends SurfaceView implements Runnable, Surfac
     private int width, height;
     private Bitmap renderOuput;
 
-    Map map;
-
     public RenderView(Context context) {
         super(context);
         getHolder().addCallback(this);
+        setOnFocusChangeListener(this);
     }
 
     public RenderView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         getHolder().addCallback(this);
+        setOnFocusChangeListener(this);
     }
 
     public abstract void update();
@@ -142,5 +145,11 @@ public abstract class RenderView extends SurfaceView implements Runnable, Surfac
     @Override
     public void surfaceDestroyed(@NonNull SurfaceHolder holder) {
         stop();
+    }
+
+    @Override
+    public void onFocusChange(View v, boolean hasFocus) {
+        InputMethodManager ims = (InputMethodManager) getContext().getSystemService(Activity.INPUT_METHOD_SERVICE);
+        ims.hideSoftInputFromWindow(getWindowToken(), 0);
     }
 }

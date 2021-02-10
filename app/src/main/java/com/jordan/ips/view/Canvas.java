@@ -144,10 +144,8 @@ public class Canvas extends RenderView implements View.OnTouchListener, ScaleGes
 
     @Override
     public boolean onTouch(View v, MotionEvent event) {
-        if(requestFocusFromTouch()){
-            InputMethodManager ims = (InputMethodManager) getContext().getSystemService(Activity.INPUT_METHOD_SERVICE);
-            ims.hideSoftInputFromWindow(getWindowToken(), 0);
-        }
+        requestFocusFromTouch();
+
         mScaleDetector.onTouchEvent(event);
         if(scaling){
             return true;

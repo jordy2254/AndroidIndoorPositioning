@@ -53,6 +53,11 @@ public abstract class BaseRecycler<T, R extends RecyclerView.ViewHolder> extends
         notifyDataSetChanged();
     }
 
+    public void setData(List<T> data) {
+        this.data = data;
+        notifyDataSetChanged();
+    }
+
     public List<T> getData() {
         return data;
     }
