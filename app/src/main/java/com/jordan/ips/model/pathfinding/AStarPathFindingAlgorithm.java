@@ -59,8 +59,8 @@ public class AStarPathFindingAlgorithm {
     }
 
     private int[] calculateCost(PathNode currentNode, PathNode childNode) {
-        int gCost = (int)(int)Math.abs(calculateEuclidian(endNode.x, endNode.y, childNode.x, childNode.y)*10000);
-        int hCost = (int)Math.abs(calculateEuclidian(startNode.x, startNode.y, currentNode.x, currentNode.y) *10000);
+        int gCost = (int)(int)Math.abs(calculateEuclidian(endNode.getLocation().x, endNode.getLocation().y, childNode.getLocation().x, childNode.getLocation().y)*10000);
+        int hCost = (int)Math.abs(calculateEuclidian(startNode.getLocation().x, startNode.getLocation().y, currentNode.getLocation().x, currentNode.getLocation().y) *10000);
         return new int[]{gCost, hCost};
     }
 

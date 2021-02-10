@@ -16,6 +16,7 @@ import android.view.inputmethod.InputMethodManager;
 import androidx.annotation.Nullable;
 
 import com.jordan.ips.model.data.map.persisted.Building;
+import com.jordan.ips.model.data.pathfinding.persisted.PathNode;
 import com.jordan.ips.model.locationTracking.Test;
 import com.jordan.ips.view.renderable.RenderableBuilding;
 import com.jordan.renderengine.data.Point2d;
@@ -111,6 +112,9 @@ public class Canvas extends RenderView implements View.OnTouchListener, ScaleGes
         canvas.drawText("FPS | UPS " + fpsUP1 + " | " + upsUp1, 10,200, paint);
         for (Drawable d: drawables) {
             d.draw(canvas, new Point2d(xOff, yOff), scale);
+        }
+        for(PathNode n : map.getPathRoot().flattenNodes()){
+            canvas.drawCircle(((int) n.getLocation().x), ((int) n.getLocation().y), 10, paint);
         }
     }
 

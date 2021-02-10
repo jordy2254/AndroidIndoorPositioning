@@ -1,6 +1,7 @@
 package com.jordan.ips.model.data.map.persisted;
 
 import com.google.gson.annotations.SerializedName;
+import com.jordan.ips.model.data.pathfinding.persisted.PathNode;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -14,6 +15,7 @@ public class Map implements Serializable {
     private String name;
 
     private List<Building> buildings;
+    private PathNode pathRoot;
 
     public String getIdentifier() {
         return identifier;
@@ -60,5 +62,13 @@ public class Map implements Serializable {
             buildings = new ArrayList<>();
         }
         this.buildings.add(building);
+    }
+
+    public PathNode getPathRoot() {
+        return pathRoot;
+    }
+
+    public void setPathRoot(PathNode pathRoot) {
+        this.pathRoot = pathRoot;
     }
 }

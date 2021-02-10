@@ -1,28 +1,29 @@
 package com.jordan.ips.model.data.pathfinding.persisted;
 
 import com.jordan.ips.model.data.map.persisted.Room;
+import com.jordan.renderengine.data.Point2d;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 
-public class PathNode {
+public class PathNode implements Serializable {
 
-    public double x, y;
+    public Point2d location;
     public List<Room> rooms;
     public List<PathNode> childNodes;
+    int mapId;
 
-    public PathNode(double x, double y, List<Room> rooms) {
-        this.x = x;
-        this.y = y;
+    public PathNode(Point2d location, List<Room> rooms) {
+        this.location = location;
         this.rooms = rooms;
         childNodes = new ArrayList<>();
     }
 
-    public PathNode(double x, double y) {
-        this.x = x;
-        this.y = y;
+    public PathNode(Point2d location) {
+        this.location = location;
         childNodes = new ArrayList<>();
     }
 
@@ -31,7 +32,7 @@ public class PathNode {
     }
 
     public String generateKey(){
-        return x + "," + y;
+        return location.x + "," + location.y;
     }
 
     public void addChild(boolean twoWay, PathNode child) {
@@ -61,15 +62,46 @@ public class PathNode {
 
         while(!nonComplete.isEmpty()){
             PathNode node = nonComplete.get(0);
-            for(PathNode child : node.getChildNodes()){
-                if(!complete.contains(child) && !nonComplete.contains(child)){
-                    nonComplete.add(child);
+            if(node.getChildNodes() != null){
+                for(PathNode child : node.getChildNodes()){
+                    if(!complete.contains(child) && !nonComplete.contains(child)){
+                        nonComplete.add(child);
+                    }
                 }
             }
+
             nonComplete.remove(node);
             complete.add(node);
         }
 
         return complete;
+    }
+
+    public List<Room> getRooms() {
+        return rooms;
+    }
+
+    public void setRooms(List<Room> rooms) {
+        this.rooms = rooms;
+    }
+
+    public void setChildNodes(List<PathNode> childNodes) {
+        this.childNodes = childNodes;
+    }
+
+    public int getMapId() {
+        return mapId;
+    }
+
+    public void setMapId(int mapId) {
+        this.mapId = mapId;
+    }
+
+    public Point2d getLocation() {
+        return location;
+    }
+
+    public void setLocation(Point2d location) {
+        this.location = location;
     }
 }
