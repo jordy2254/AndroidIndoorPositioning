@@ -3,7 +3,7 @@ package com.jordan.ips.model.pathfinding;
 
 
 import com.jordan.ips.model.data.pathfinding.AStarNode;
-import com.jordan.ips.model.data.pathfinding.persisted.PathNode;
+import com.jordan.ips.model.data.pathfinding.PathNode;
 
 import java.util.ArrayList;
 import java.util.Comparator;

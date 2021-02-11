@@ -1,4 +1,4 @@
-package com.jordan.ips.model.data.pathfinding.persisted;
+package com.jordan.ips.model.data.pathfinding;
 
 import com.jordan.ips.model.data.map.persisted.Room;
 import com.jordan.renderengine.data.Point2d;

@@ -1,7 +1,5 @@
 package com.jordan.ips.model.data.pathfinding;
 
-import com.jordan.ips.model.data.pathfinding.persisted.PathNode;
-
 public class AStarNode {
 
     public PathNode pathNode;

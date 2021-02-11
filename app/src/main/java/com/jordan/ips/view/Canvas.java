@@ -14,7 +14,7 @@ import android.view.View;
 import androidx.annotation.Nullable;
 
 import com.jordan.ips.model.data.map.persisted.Building;
-import com.jordan.ips.model.data.pathfinding.persisted.PathNode;
+import com.jordan.ips.model.data.pathfinding.PathNode;
 import com.jordan.ips.model.locationTracking.BluetoothScanner;
 import com.jordan.ips.view.renderable.RenderableBuilding;
 import com.jordan.renderengine.data.Point2d;
@@ -78,9 +78,9 @@ public class Canvas extends RenderView implements View.OnTouchListener, ScaleGes
             r.render(screen, new Point2d(xOff, yOff), scale);
         }
 
-        List<PathNode> flattenedNodes = map.getPathRoot().flattenNodes();
+        List<PathNode> flattenedNodes = map.getRootNode().flattenNodes();
 
-        for(PathNode n : map.getPathRoot().flattenNodes()){
+        for(PathNode n : flattenedNodes){
             int size = 10;
             int dx = (int)((n.getLocation().x * scale) + xOff - (size / 2));
             int dy = (int)((n.getLocation().y * scale) + yOff - (size / 2));
@@ -89,7 +89,7 @@ public class Canvas extends RenderView implements View.OnTouchListener, ScaleGes
 
 
         //draw our path points
-        List<PathNode> nonComplete = new ArrayList<>(Arrays.asList(map.getPathRoot()));
+        List<PathNode> nonComplete = new ArrayList<>(Arrays.asList(map.getRootNode()));
         List<PathNode> complete = new ArrayList<>();
 
         while(!nonComplete.isEmpty()){
