@@ -8,6 +8,7 @@ public class MapNode  implements Serializable {
 
     private int id;
     private int mapId;
+    private int floorIndex;
     private Point2d location;
     private boolean rootNode;
 

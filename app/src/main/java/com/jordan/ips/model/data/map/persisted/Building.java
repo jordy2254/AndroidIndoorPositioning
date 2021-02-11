@@ -21,6 +21,7 @@ public class Building implements Serializable {
         }
         floors.add(floor);
     }
+
     public List<Floor> getFloors() {
         return floors;
     }
