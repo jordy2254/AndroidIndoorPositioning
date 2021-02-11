@@ -21,8 +21,10 @@ import com.jordan.renderengine.data.Point2d;
 import com.jordan.ips.model.data.map.persisted.Map;
 import com.jordan.renderengine.android.RenderView;
 import com.jordan.renderengine.Screen;
+import com.jordan.renderengine.data.Point2i;
 import com.jordan.renderengine.graphics.Drawable;
 import com.jordan.renderengine.graphics.Renderable;
+import com.jordan.renderengine.utils.RenderUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -32,6 +34,7 @@ public class Canvas extends RenderView implements View.OnTouchListener, ScaleGes
 
     Screen screen = Screen.getInstance();
     private Map map;
+
 
     private double xOff = 0;
     private double yOff = 0;
@@ -93,12 +96,10 @@ public class Canvas extends RenderView implements View.OnTouchListener, ScaleGes
             PathNode node = nonComplete.get(0);
             if(node.getChildNodes() != null){
                 for(PathNode child : node.getChildNodes()){
+                    Point2i p1 = RenderUtils.calculateRenderLocation(node.getLocation(), new Point2d(xOff, yOff), scale);
+                    Point2i p2 = RenderUtils.calculateRenderLocation(child.getLocation(), new Point2d(xOff, yOff), scale);
 
-                    int dx = (int)((node.getLocation().x * scale) + xOff);
-                    int dy = (int)((node.getLocation().y * scale) + yOff);
-                    int dx1 = (int)((child.getLocation().x * scale) + xOff);
-                    int dy1 = (int)((child.getLocation().y * scale) + yOff);
-                    screen.drawLine(dx, dy, dx1, dy1, 3, 0xfefefe);
+                    screen.drawLine(p1.x, p1.y, p2.x, p2.y, 3, 0xfefefe);
                     if(!complete.contains(child) && !nonComplete.contains(child)){
                         nonComplete.add(child);
                     }
@@ -176,6 +177,19 @@ public class Canvas extends RenderView implements View.OnTouchListener, ScaleGes
         setFocusable(true);
         mScaleDetector = new ScaleGestureDetector(context, this);
     }
+
+    public void addRenderable(Renderable renderable){
+        this.renderables.add(renderable);
+    }
+
+    public void removeRenderable(Renderable renderable){
+        this.renderables.remove(renderable);
+    }
+
+    public void clearRenderables(){
+        this.renderables.clear();
+    }
+
 
     @Override
     public boolean onTouch(View v, MotionEvent event) {
