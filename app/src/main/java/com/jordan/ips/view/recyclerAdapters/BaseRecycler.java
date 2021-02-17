@@ -18,7 +18,7 @@ public abstract class BaseRecycler<T, R extends RecyclerView.ViewHolder> extends
     protected LayoutInflater inflater;
     protected Context context;
 
-    private int viewId;
+    private final int viewId;
 
     protected abstract R createViewHolder(View view);
 

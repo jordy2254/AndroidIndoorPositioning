@@ -31,10 +31,7 @@ public class LineIntersection {
         if ((t_numer < 0) == denomPositive)
             return false; // No collision
 
-        if (((s_numer > denom) == denomPositive) || ((t_numer > denom) == denomPositive))
-            return false; // No collision
+        return ((s_numer > denom) != denomPositive) && ((t_numer > denom) != denomPositive); // No collision
         // Collision detected
-
-        return true;
     }
 }

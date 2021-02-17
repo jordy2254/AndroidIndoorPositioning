@@ -19,22 +19,6 @@ public class RoomPolygonGenerator {
 
     private RoomPolygonGenerator(){}
 
-    /**
-     * Rendering code. Just renders the wall in the correct place. and calls calculate walls.
-     */
-//    @Override
-//    public void render(Screen screen, Point2d offset, double scale) {
-//
-//
-//        int color = 0xf0ae5d;
-//        if(room.isSelected()){
-//            color = 0xff00ff;
-//        }
-//        screen.drawPolygonUpdated(polygon, 2, 0x0, color, true);
-//        screen.drawPolygon(polygon, 2, 0x0, true);
-//    }
-//
-
     public static List<Point2d> createPolygon(Room room){
         List<Pair<Point2d,Point2d>> walls = calculateWalls(room);
         List<Point2d> polygon = createPolygon(room, walls);

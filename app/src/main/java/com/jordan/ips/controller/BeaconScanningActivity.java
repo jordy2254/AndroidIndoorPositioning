@@ -9,12 +9,12 @@ import com.jordan.ips.model.locationTracking.BluetoothScanner;
 
 public class BeaconScanningActivity extends AppCompatActivity {
 
-    private BluetoothScanner bluetoothScanner = new BluetoothScanner();
+    private final BluetoothScanner bluetoothScanner = new BluetoothScanner();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_beacon_scanning);
-        bluetoothScanner.test();
+        BluetoothScanner.test();
     }
 }

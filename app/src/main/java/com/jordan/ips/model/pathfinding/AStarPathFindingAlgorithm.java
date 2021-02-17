@@ -14,7 +14,8 @@ public class AStarPathFindingAlgorithm {
     private List<AStarNode> openList;
     private List<AStarNode> closeList;
 
-    private PathNode startNode, endNode;
+    private PathNode startNode;
+    private final PathNode endNode;
     private AStarNode currentNode = null;
 
     public AStarPathFindingAlgorithm(PathNode startNode, PathNode endNode) {
@@ -74,7 +75,7 @@ public class AStarPathFindingAlgorithm {
         return result;
     }
 
-    private Comparator<AStarNode> nodeSorter = new Comparator<AStarNode>() {
+    private final Comparator<AStarNode> nodeSorter = new Comparator<AStarNode>() {
         @Override
         public int compare(AStarNode n0, AStarNode n1) {
             if(n1.fCost < n0.fCost){

@@ -21,7 +21,7 @@ public abstract class RenderView extends SurfaceView implements Runnable, Surfac
 
     private static final int fpsLOCK = 30;
     private Thread thread;
-    private Screen screen = Screen.getInstance();
+    private final Screen screen = Screen.getInstance();
     private boolean running = false;
 
     protected int fps = 0, ups = 0, fpsUP1, upsUp1;

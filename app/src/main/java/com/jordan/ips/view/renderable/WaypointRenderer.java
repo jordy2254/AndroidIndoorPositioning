@@ -9,7 +9,7 @@ import com.jordan.renderengine.utils.RenderUtils;
 
 public class WaypointRenderer implements Renderable {
 
-    private Waypoint waypoint;
+    private final Waypoint waypoint;
 
     public WaypointRenderer(Waypoint waypoint) {
         this.waypoint = waypoint;

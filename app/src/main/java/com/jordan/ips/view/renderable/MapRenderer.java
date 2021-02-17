@@ -17,7 +17,7 @@ import java.util.List;
 public class MapRenderer implements Renderable {
 
     private int selectedFloorIndex = 0;
-    private Map selectedMap;
+    private final Map selectedMap;
 
     java.util.Map<Long, List<Point2d>> roomPolygonCache = new HashMap<>();
 
