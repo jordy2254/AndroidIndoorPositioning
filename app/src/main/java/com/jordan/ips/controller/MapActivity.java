@@ -14,14 +14,19 @@ import android.widget.LinearLayout;
 
 import com.jordan.ips.R;
 import com.jordan.ips.model.data.MapWrapper;
+import com.jordan.ips.model.data.map.persisted.Building;
+import com.jordan.ips.model.data.map.persisted.Floor;
 import com.jordan.ips.model.data.map.persisted.Room;
 import com.jordan.ips.model.data.waypoints.RoomWaypoint;
 import com.jordan.ips.model.data.waypoints.Waypoint;
 import com.jordan.ips.model.locationTracking.BluetoothScanner;
 import com.jordan.ips.view.Canvas;
+import com.jordan.ips.view.renderable.MapRenderer;
 import com.jordan.ips.view.renderable.WaypointRenderer;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class MapActivity extends AppCompatActivity {
 
@@ -46,6 +51,9 @@ public class MapActivity extends AppCompatActivity {
 
     LinearLayout lytDirectionPanel;
 
+    List<Integer> floorIndexes;
+
+    MapRenderer mapRenderer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,45 +64,47 @@ public class MapActivity extends AppCompatActivity {
         Intent intent = getIntent();
         map = (MapWrapper) intent.getSerializableExtra(INTENT_MAP);
 
+        //Pull out unqique floor indexes
+        floorIndexes = map.getMap().getBuildings()
+                .stream()
+                .flatMap(building -> building.getFloors().stream())
+                .map(Floor::getFloorNumber)
+                .distinct()
+                .sorted(Integer::compareTo)
+                .collect(Collectors.toList());
+
         lytDirectionPanel = findViewById(R.id.lytDirectionPanel);
         btnDirections = findViewById(R.id.btnDirections);
 
         txtTarget = findViewById(R.id.txtTarget);
-        txtTarget.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if(hasFocus){
-                    Intent i = new Intent(getApplicationContext(), LocationSearchActivity.class);
-                    i.putExtra(INTENT_MAP, map);
+        txtTarget.setOnFocusChangeListener((v, hasFocus) -> {
+            if(hasFocus){
+                Intent i = new Intent(getApplicationContext(), LocationSearchActivity.class);
+                i.putExtra(INTENT_MAP, map);
 
-                    startActivityForResult(i, END_POINT_SEARCH);
-                }
+                startActivityForResult(i, END_POINT_SEARCH);
             }
         });
 
         txtStartPoint = findViewById(R.id.txtStartPoint);
-        txtStartPoint.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if(hasFocus){
-                    Intent i = new Intent(getApplicationContext(), LocationSearchActivity.class);
-                    i.putExtra(INTENT_MAP, map);
+        txtStartPoint.setOnFocusChangeListener((v, hasFocus) -> {
+            if(hasFocus){
+                Intent i = new Intent(getApplicationContext(), LocationSearchActivity.class);
+                i.putExtra(INTENT_MAP, map);
 
-                    startActivityForResult(i, START_POINT_SEARCH);
-                }
+                startActivityForResult(i, START_POINT_SEARCH);
             }
         });
 
         canvas = findViewById(R.id.mapCanvas);
-        canvas.setMap(map.getMap());
+
+        mapRenderer = new MapRenderer(map.getMap());
+        mapRenderer.setSelectedFloorIndex(floorIndexes.get(0));
+        canvas.addRenderable(mapRenderer);
+
         updateLayout();
 
-        new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        BluetoothScanner.test();
-                    }
-                }, "Sensor Thread").start();
+        new Thread(() -> BluetoothScanner.test(), "Sensor Thread").start();
     }
 
     private void updateLayout(){

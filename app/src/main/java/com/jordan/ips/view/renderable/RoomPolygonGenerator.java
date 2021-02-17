@@ -14,56 +14,50 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class RenderableRoom implements Renderable {
+public class RoomPolygonGenerator {
 
-    Room room;
-    private boolean wallsCalculated = false;
-    public List<Pair<Point2d,Point2d>> walls;
 
-    public RenderableRoom(Room room) {
-        this.room = room;
-    }
+    private RoomPolygonGenerator(){}
 
     /**
      * Rendering code. Just renders the wall in the correct place. and calls calculate walls.
      */
-    @Override
-    public void render(Screen screen, Point2d offset, double scale) {
-//        if(!room.getName().equals("Bathroom")){
-//            return;
-////        }
-//        if(room.getId() != 1) return;
-
-        calculateWalls();
-        List<Point2d> polygon = createPolygon((int)offset.x, (int)offset.y, scale);
-//        screen.fillNonRecursive(0,0, 0xff00ff);
-        int color = 0xf0ae5d;
-        if(room.isSelected()){
-            color = 0xff00ff;
-        }
-        screen.drawPolygonUpdated(polygon, 2, 0x0, color, true);
-        screen.drawPolygon(polygon, 2, 0x0, true);
-    }
 //    @Override
-//    public void draw(Canvas canvas, Graphics g, int offX, int offY, float scale) {
-//        calculateWalls();
-//        Graphics2D g2 = (Graphics2D)g;
-//        float thickness = 4;
-//        g2.setStroke(new BasicStroke(thickness));
-//        g2.setColor(Color.BLACK);
+//    public void render(Screen screen, Point2d offset, double scale) {
 //
-//        Polygon p = createRenderablePolygon(offX, offY, scale);
-//        g2.setColor(new Color(0xFED77E));
-//        g2.fillPolygon(p);
-//        g2.setColor(new Color(0xA97600));
-//        g2.drawPolygon(p);
-//        g2.setColor(Color.BLACK);
-//        double averagex = Arrays.stream(p.xpoints).sum() / p.npoints;
-//        double averagey = Arrays.stream(p.ypoints).sum()/ p.npoints;
-//        g2.drawString(room.getName(), (int)averagex, (int)averagey);
+//
+//        int color = 0xf0ae5d;
+//        if(room.isSelected()){
+//            color = 0xff00ff;
+//        }
+//        screen.drawPolygonUpdated(polygon, 2, 0x0, color, true);
+//        screen.drawPolygon(polygon, 2, 0x0, true);
 //    }
+//
 
-    private List<Point2d> createPolygon(int offX, int offY, double scale){
+    public static List<Point2d> createPolygon(Room room){
+        List<Pair<Point2d,Point2d>> walls = calculateWalls(room);
+        List<Point2d> polygon = createPolygon(room, walls);
+        return polygon;
+    }
+
+    public static List<Point2d>  translate(List<Point2d> points, Point2d translation){
+        List<Point2d> nPoints = new ArrayList<>();
+        points.forEach(point2d -> {
+            nPoints.add(point2d.add(translation));
+        });
+        return nPoints;
+    }
+
+    public static List<Point2d> scale(List<Point2d> points, double scale) {
+        List<Point2d> nPoints = new ArrayList<>();
+        points.forEach(point2d -> {
+            nPoints.add(point2d.multiply(new Point2d(scale, scale)));
+        });
+        return nPoints;
+    }
+
+    private static List<Point2d> createPolygon(Room room,List<Pair<Point2d,Point2d>> walls){
         List<Point2d> p = new ArrayList<>();
         Pair<Point2d, Point2d> firstPair = null;
         Pair<Point2d, Point2d> lastPair = null;
@@ -73,7 +67,7 @@ public class RenderableRoom implements Renderable {
             if(firstPair == null){
                 firstPair = walls.get(0);
                 lastPair = firstPair;
-                p.add(new Point2d(((firstPair.fst.x * scale)) + offX, ((firstPair.fst.y * scale) ) + offY));
+                p.add(new Point2d(((firstPair.fst.x)), ((firstPair.fst.y) )));
                 continue;
             }
             if(lastPair.snd.equals(firstPair.fst)){
@@ -90,8 +84,7 @@ public class RenderableRoom implements Renderable {
             if(current == null){
                 break;
             }
-            p.add(new Point2d((current.fst.x * scale) + offX,
-                    ((current.fst.y * scale)) + offY));
+            p.add(new Point2d(current.fst.x , current.fst.y));
             lastPair = current;
         }
         if(panic == walls.size() *2 +1){
@@ -119,15 +112,11 @@ public class RenderableRoom implements Renderable {
 //            point.x = xnew + origin.x;
 //            point.y = ynew + origin.y;
 //        }
-        for(Point2d point : p){
-            point.x += room.getLocation().x * scale;
-            point.y += room.getLocation().y * scale;
-        }
 //        p.translate((int)(room.getxLocation() * scale), (int)(room.getyLocation() * scale));
         return p;
     }
 
-    public boolean linesIntersect(Point2d p1, Point2d p2, Point2d p3, Point2d p4){
+    public static boolean linesIntersect(Point2d p1, Point2d p2, Point2d p3, Point2d p4){
 
         //vertical line
         if(p1.x == p3.x && p2.x == p3.x && p4.x == p1.x){
@@ -158,7 +147,7 @@ public class RenderableRoom implements Renderable {
         return false;
     }
 
-    private List<Pair<Point2d,Point2d>> calculateRectangleEdgePairs(double x, double y, double width, double height){
+    private static List<Pair<Point2d,Point2d>> calculateRectangleEdgePairs(double x, double y, double width, double height){
         List<Pair<Point2d,Point2d>> points = new ArrayList<>();
         Point2d tl = new Point2d(x, y);
         Point2d tr = new Point2d(x + width, y);
@@ -175,11 +164,7 @@ public class RenderableRoom implements Renderable {
 
 
 
-    public void calculateWalls() {
-        if(wallsCalculated){
-            return;
-        }
-
+    private static List<Pair<Point2d, Point2d>> calculateWalls(Room room) {
         //calculate all indent edges
         List<Pair<Point2d,Point2d>> roomEdges = new ArrayList<>();
         roomEdges.addAll(calculateRectangleEdgePairs(0, 0, room.getDimensions().x, room.getDimensions().y));
@@ -248,11 +233,11 @@ public class RenderableRoom implements Renderable {
                 tmpWall.snd = tmp;
             }
         }
-        walls = new ArrayList<>();
+        List<Pair<Point2d, Point2d>> walls = new ArrayList<>();
         walls.addAll(roomEdges);
         walls.addAll(indentEdges);
-
-        wallsCalculated = true;
+        return walls;
     }
+
 
 }
