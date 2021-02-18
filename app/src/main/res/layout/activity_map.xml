@@ -17,20 +17,17 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
+
         <com.jordan.ips.view.Canvas
             android:id="@+id/mapCanvas"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            />
+            android:layout_height="match_parent" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
+
             <EditText
                 android:id="@+id/txtTarget"
                 android:layout_width="match_parent"
@@ -45,19 +42,21 @@
                 android:inputType="text"
                 android:padding="25px" />
         </LinearLayout>
-
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/lstResults"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/white"
-                android:visibility="gone"
-                tools:itemCount="8"
-                tools:listitem="@layout/recycler_view_item" />
-        </LinearLayout>
-
     </FrameLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/lstFloors"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@+id/frameLayout"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginRight="20dp"
+        android:layout_marginBottom="20dp"
+        tools:itemCount="3"
+        android:maxHeight="150dp"
+        android:background="@drawable/floor_selection_background"
+        tools:listitem="@layout/recycler_view_floor_selection"
+        />
 
     <LinearLayout
         android:id="@+id/lytDirectionPanel"
@@ -65,7 +64,8 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:visibility="gone">
+        android:visibility="gone"
+        >
 
     <LinearLayout
         android:id="@+id/linearLayout3"

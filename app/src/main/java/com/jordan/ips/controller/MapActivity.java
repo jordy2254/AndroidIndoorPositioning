@@ -2,6 +2,8 @@ package com.jordan.ips.controller;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -14,13 +16,13 @@ import android.widget.LinearLayout;
 
 import com.jordan.ips.R;
 import com.jordan.ips.model.data.MapWrapper;
-import com.jordan.ips.model.data.map.persisted.Building;
 import com.jordan.ips.model.data.map.persisted.Floor;
 import com.jordan.ips.model.data.map.persisted.Room;
 import com.jordan.ips.model.data.waypoints.RoomWaypoint;
 import com.jordan.ips.model.data.waypoints.Waypoint;
 import com.jordan.ips.model.locationTracking.BluetoothScanner;
 import com.jordan.ips.view.Canvas;
+import com.jordan.ips.view.recyclerAdapters.BasicRecyclerAdapter;
 import com.jordan.ips.view.renderable.MapRenderer;
 import com.jordan.ips.view.renderable.WaypointRenderer;
 
@@ -55,6 +57,9 @@ public class MapActivity extends AppCompatActivity {
 
     MapRenderer mapRenderer;
 
+    RecyclerView lstFloors;
+    BasicRecyclerAdapter floorsAdapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,15 +68,6 @@ public class MapActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         map = (MapWrapper) intent.getSerializableExtra(INTENT_MAP);
-
-        //Pull out unqique floor indexes
-        floorIndexes = map.getMap().getBuildings()
-                .stream()
-                .flatMap(building -> building.getFloors().stream())
-                .map(Floor::getFloorNumber)
-                .distinct()
-                .sorted(Integer::compareTo)
-                .collect(Collectors.toList());
 
         lytDirectionPanel = findViewById(R.id.lytDirectionPanel);
         btnDirections = findViewById(R.id.btnDirections);
@@ -98,13 +94,34 @@ public class MapActivity extends AppCompatActivity {
 
         canvas = findViewById(R.id.mapCanvas);
 
+        //Pull out unqique floor indexes
+        floorIndexes = map.getMap().getBuildings()
+                .stream()
+                .flatMap(building -> building.getFloors().stream())
+                .map(Floor::getFloorNumber)
+                .distinct()
+                .sorted(Integer::compareTo)
+                .collect(Collectors.toList());
+
+        List<String> stringValues = floorIndexes.stream().map(integer -> String.valueOf(integer)).collect(Collectors.toList());
+        floorsAdapter = new BasicRecyclerAdapter(getApplicationContext(), stringValues);
+
+        lstFloors = findViewById(R.id.lstFloors);
+        lstFloors.setLayoutManager(new LinearLayoutManager(this));
+        lstFloors.setAdapter(floorsAdapter);
+
         mapRenderer = new MapRenderer(map.getMap());
         mapRenderer.setSelectedFloorIndex(floorIndexes.get(0));
+
+        floorsAdapter.setBasicRecyclerAdapterListener((position) -> {
+            Log.d("abcd", "Setting floor position to index: " + position);
+            mapRenderer.setSelectedFloorIndex(floorIndexes.get(position));
+        });
         canvas.addRenderable(mapRenderer);
 
         updateLayout();
 
-        new Thread(() -> BluetoothScanner.test(), "Sensor Thread").start();
+//        new Thread(() -> BluetoothScanner.test(), "Sensor Thread").start();
     }
 
     private void updateLayout(){
