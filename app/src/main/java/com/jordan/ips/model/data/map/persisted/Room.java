@@ -21,30 +21,7 @@ public class Room implements Serializable {
 
     private List<RoomIndent> indents;
 
-
     private transient boolean selected = false;
-
-
-    public boolean isPointInRoom(Point2d point){
-
-        //if we're not in initial wall bounds
-        if(!(point.x >= location.x && point.x <= location.x+dimensions.x && point.y >= location.y && point.y <= location.y+dimensions.y)){
-            return false;
-        }
-
-        //if we're within an indent, we're outside of room bounds
-        for(RoomIndent indent : indents){
-            try {
-                double[] startLocations = IndentLocationFinder.findStartPointsOfIndent(this, indent, false);
-                if((point.x >= startLocations[0] && point.x <=  startLocations[0]+indent.getDimensions().x && point.y >=  startLocations[1] && point.y <=  startLocations[1]+indent.getDimensions().y)){
-                    return false;
-                }
-            } catch (InvalidLocationException e) {
-                e.printStackTrace();
-            }
-        }
-        return true;
-    }
 
     public List<RoomIndent> getIndents() {
         return indents;

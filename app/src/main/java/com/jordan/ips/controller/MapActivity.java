@@ -23,6 +23,7 @@ import com.jordan.ips.model.data.waypoints.CurrentLocationWayPoint;
 import com.jordan.ips.model.data.waypoints.RoomWaypoint;
 import com.jordan.ips.model.data.waypoints.Waypoint;
 import com.jordan.ips.model.pathfinding.AStarPathFindingAlgorithm;
+import com.jordan.ips.model.utils.MapUtils;
 import com.jordan.ips.view.Canvas;
 import com.jordan.ips.view.recyclerAdapters.BasicRecyclerAdapter;
 import com.jordan.ips.view.renderable.MapRenderer;
@@ -233,7 +234,7 @@ public class MapActivity extends AppCompatActivity {
         }
         Optional<PathNode> node = map.getMap().getRootNode().flattenNodes()
                 .stream()
-                .filter(pathNode -> room.get().isPointInRoom(pathNode.getLocation()))
+                .filter(pathNode -> MapUtils.isPointInRoom(map.getMap(), room.get(), pathNode.getLocation()))
                 .sorted(
                         (o1, o2) -> {
                             Point2d roomCenter = room.get().getDimensions().divide(new Point2d(2,2)).add(room.get().getLocation());

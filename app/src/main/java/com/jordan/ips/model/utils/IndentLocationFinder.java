@@ -4,6 +4,7 @@ import com.jordan.ips.model.data.map.persisted.Room;
 
 import com.jordan.ips.model.data.map.persisted.RoomIndent;
 import com.jordan.ips.model.exceptions.InvalidLocationException;
+import com.jordan.renderengine.data.Point2d;
 
 public class IndentLocationFinder {
 
@@ -14,7 +15,7 @@ public class IndentLocationFinder {
      * @return
      * @throws InvalidLocationException
      */
-    public static final double[] findStartPointsOfIndent(Room room, RoomIndent indent, boolean ignoreLocation) throws InvalidLocationException {
+    public static final Point2d findStartPointsOfIndent(Room room, RoomIndent indent, boolean ignoreLocation) throws InvalidLocationException {
         if (!indent.getWallKeyA().isEmpty() && !indent.getWallKeyB().isEmpty()) {
 
             double xStart = 0;
@@ -30,7 +31,7 @@ public class IndentLocationFinder {
                 xStart += room.getLocation().x;
                 yStart += room.getLocation().y;
             }
-            return new double[]{xStart, yStart};
+            return new Point2d(xStart, yStart);
         } else if (!indent.getWallKeyA().isEmpty()) {
             double xStart = 0;
             double yStart = 0;
@@ -59,7 +60,7 @@ public class IndentLocationFinder {
                 xStart += room.getLocation().x;
                 yStart += room.getLocation().y;
             }
-            return new double[]{xStart, yStart};
+            return new Point2d(xStart, yStart);
         }
         throw new InvalidLocationException("No indent location found");
     }

@@ -2,6 +2,7 @@ package com.jordan.ips.view.renderable;
 
 import com.jordan.ips.model.data.map.persisted.Map;
 import com.jordan.ips.model.data.pathfinding.PathNode;
+import com.jordan.ips.model.utils.rendering.RoomPolygonGenerator;
 import com.jordan.renderengine.Screen;
 import com.jordan.renderengine.data.Pair;
 import com.jordan.renderengine.data.Point2d;
@@ -33,6 +34,7 @@ public class MapRenderer implements Renderable {
                     .filter(floor -> floor.getFloorNumber() == selectedFloorIndex)
                     .forEach(floor -> {
                         floor.getRooms().forEach(room -> {
+
                             if(!roomPolygonCache.containsKey(room.getId())){
                                 roomPolygonCache.put(room.getId(), RoomPolygonGenerator.createPolygon(room));
                             }
