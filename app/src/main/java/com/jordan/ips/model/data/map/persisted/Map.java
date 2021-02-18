@@ -155,4 +155,12 @@ public class Map implements Serializable {
         }
         this.buildings.add(building);
     }
+
+    public List<MapNode> getNodes() {
+        return nodes;
+    }
+
+    public List<MapEdge> getEdges() {
+        return edges;
+    }
 }

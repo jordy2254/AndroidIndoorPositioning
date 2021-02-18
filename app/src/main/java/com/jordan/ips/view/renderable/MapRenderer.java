@@ -48,9 +48,9 @@ public class MapRenderer implements Renderable {
                             List<Point2d> renderPoints = RoomPolygonGenerator.scale(roomPolygonCache.get(room.getId()), scale);
                             renderPoints = RoomPolygonGenerator.translate(renderPoints, translation);
                             int color = 0xf0ae5d;
-                            if(room.isSelected()){
-                                color = 0xff00ff;
-                            }
+//                            if(room.isSelected()){
+//                                color = 0xff00ff;
+//                            }
                             screen.drawPolygonUpdated(renderPoints, 2, 0x0, color, true);
                             screen.drawPolygon(renderPoints, 2, 0x0, true);
                         });

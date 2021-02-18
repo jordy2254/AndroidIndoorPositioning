@@ -1,10 +1,12 @@
 package com.jordan.ips.model.data.waypoints;
 
+import com.jordan.ips.model.data.pathfinding.PathNode;
 import com.jordan.renderengine.data.Point2d;
 
 public abstract class Waypoint<T> {
 
     T point;
+    PathNode pathNode;
 
     public Waypoint(T point) {
         this.point = point;
@@ -18,6 +20,13 @@ public abstract class Waypoint<T> {
 
     public T getPoint(){
         return point;
+    }
 
+    public PathNode getPathNode() {
+        return pathNode;
+    }
+
+    public void setPathNode(PathNode pathNode) {
+        this.pathNode = pathNode;
     }
 }

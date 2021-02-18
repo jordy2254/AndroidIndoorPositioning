@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -18,13 +19,19 @@ import com.jordan.ips.R;
 import com.jordan.ips.model.data.MapWrapper;
 import com.jordan.ips.model.data.map.persisted.Floor;
 import com.jordan.ips.model.data.map.persisted.Room;
+import com.jordan.ips.model.data.pathfinding.AStarNode;
+import com.jordan.ips.model.data.pathfinding.PathNode;
 import com.jordan.ips.model.data.waypoints.RoomWaypoint;
 import com.jordan.ips.model.data.waypoints.Waypoint;
 import com.jordan.ips.model.locationTracking.BluetoothScanner;
+import com.jordan.ips.model.pathfinding.AStarPathFindingAlgorithm;
 import com.jordan.ips.view.Canvas;
 import com.jordan.ips.view.recyclerAdapters.BasicRecyclerAdapter;
 import com.jordan.ips.view.renderable.MapRenderer;
+import com.jordan.ips.view.renderable.PathRenderer;
+import com.jordan.ips.view.renderable.RoomPolygonGenerator;
 import com.jordan.ips.view.renderable.WaypointRenderer;
+import com.jordan.renderengine.data.Point2d;
 
 import java.util.List;
 import java.util.Optional;
@@ -59,7 +66,8 @@ public class MapActivity extends AppCompatActivity {
 
     RecyclerView lstFloors;
     BasicRecyclerAdapter floorsAdapter;
-
+    AStarPathFindingAlgorithm aStarPathFindingAlgorithm;
+    PathRenderer pathRenderer;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -71,6 +79,25 @@ public class MapActivity extends AppCompatActivity {
 
         lytDirectionPanel = findViewById(R.id.lytDirectionPanel);
         btnDirections = findViewById(R.id.btnDirections);
+
+        btnDirections.setOnClickListener(v -> {
+            if(pathRenderer != null){
+                canvas.removeRenderable(pathRenderer);
+                pathRenderer = null;
+                btnDirections.setText("Directions");
+                return;
+            }
+            aStarPathFindingAlgorithm = new AStarPathFindingAlgorithm(startWaypoint.getPathNode(), endWaypoint.getPathNode());
+            List<PathNode> nodes = aStarPathFindingAlgorithm.compute();
+            if (pathRenderer == null) {
+                pathRenderer = new PathRenderer(nodes);
+                canvas.addRenderable(pathRenderer);
+                return;
+            }
+            pathRenderer.setNodes(nodes);
+
+            btnDirections.setText("Cancel Directions");
+        });
 
         txtTarget = findViewById(R.id.txtTarget);
         txtTarget.setOnFocusChangeListener((v, hasFocus) -> {
@@ -132,7 +159,7 @@ public class MapActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
+        canvas.requestFocusFromTouch();
         if(resultCode != Activity.RESULT_OK){
             return;
         }
@@ -154,7 +181,7 @@ public class MapActivity extends AppCompatActivity {
                 setEndWaypoint(waypoint.get());
 
                 txtTarget.setText(waypoint.get().getPoint().getName());
-                canvas.requestFocusFromTouch();
+
                 break;
             default:
                 Log.w("SEARCH", "No handler for request code: " + requestCode);
@@ -170,7 +197,26 @@ public class MapActivity extends AppCompatActivity {
             Log.e("Search", "Room with id not found on map: " + selectedId);
             return Optional.empty();
         }
-        return Optional.of(new RoomWaypoint(room.get()));
+        Waypoint<Room> waypoint = new RoomWaypoint(room.get());
+        Optional<PathNode> node = map.getMap().getRootNode().flattenNodes()
+                .stream()
+                .filter(pathNode -> room.get().isPointInRoom(pathNode.getLocation()))
+                .sorted(
+                        (o1, o2) -> {
+                            Point2d roomCenter = room.get().getDimensions().divide(new Point2d(2,2)).add(room.get().getLocation());
+
+                            float euclidian1 = (float) Math.sqrt( ((o1.getLocation().y - roomCenter.y) * (o1.getLocation().y - roomCenter.y))+ ((o1.getLocation().x - roomCenter.x * (o1.getLocation().x - roomCenter.x))));
+                            float euclidian2 = (float) Math.sqrt( ((o2.getLocation().y - roomCenter.y) * (o2.getLocation().y - roomCenter.y))+ ((o2.getLocation().x - roomCenter.x * (o2.getLocation().x - roomCenter.x))));
+
+                            return (int) (euclidian1 - euclidian2);
+                        }
+                )
+                .findFirst();
+        if(!node.isPresent()){
+            return Optional.empty();
+        }
+        waypoint.setPathNode(node.get());
+        return Optional.of(waypoint);
     }
 
     public void setStartWaypoint(Waypoint startWaypoint) {
