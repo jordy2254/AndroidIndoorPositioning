@@ -1,5 +1,7 @@
 package com.jordan.ips.model.utils;
 
+import android.util.Log;
+
 import com.jordan.ips.model.data.map.persisted.Map;
 import com.jordan.ips.model.data.map.persisted.Room;
 import com.jordan.ips.model.data.pathfinding.PathNode;
@@ -35,6 +37,8 @@ public class PathFindingUtils {
                 .stream()
                 .filter(pathNode -> MapUtils.isPointInRoom(map, pointRoom, pathNode.getLocation()))
                 .collect(Collectors.toList());
+
+        Log.d("ttt", "Found nodes: " + releventNodes.size());
 
         for (PathNode node : releventNodes) {
             List<Pair<Point2d, Point2d>> walls = RoomPolygonGenerator.calculateWalls(pointRoom);

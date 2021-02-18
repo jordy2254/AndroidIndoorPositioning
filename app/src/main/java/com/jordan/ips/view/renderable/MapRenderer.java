@@ -55,9 +55,11 @@ public class MapRenderer implements Renderable {
 //                            }
                             screen.drawPolygonUpdated(renderPoints, 2, 0x0, color, true);
                             screen.drawPolygon(renderPoints, 2, 0x0, true);
+
                         });
                     });
         });
+        renderPathNodes(screen, offset, scale);
     }
 
     public int getSelectedFloorIndex() {
@@ -72,35 +74,41 @@ public class MapRenderer implements Renderable {
         this.selectedFloorIndex = selectedFloorIndex;
     }
 
-//PATH NODE RENDERING
-//    List<PathNode> flattenedNodes = map.getRootNode().flattenNodes();
-//
-//        for(PathNode n : flattenedNodes){
-//        int size = 10;
-//        int dx = (int)((n.getLocation().x * scale) + xOff - (size / 2));
-//        int dy = (int)((n.getLocation().y * scale) + yOff - (size / 2));
-//        screen.renderRect(dx, dy, size, size, 0xffeeff);
-//    }
-//
-//
-//    //draw our path points
-//    List<PathNode> nonComplete = new ArrayList<>(Arrays.asList(map.getRootNode()));
-//    List<PathNode> complete = new ArrayList<>();
-//
-//        while(!nonComplete.isEmpty()){
-//        PathNode node = nonComplete.get(0);
-//        if(node.getChildNodes() != null){
-//            for(PathNode child : node.getChildNodes()){
-//                Point2i p1 = RenderUtils.calculateRenderLocation(node.getLocation(), new Point2d(xOff, yOff), scale);
-//                Point2i p2 = RenderUtils.calculateRenderLocation(child.getLocation(), new Point2d(xOff, yOff), scale);
-//
-//                screen.drawLine(p1.x, p1.y, p2.x, p2.y, 3, 0xfefefe);
-//                if(!complete.contains(child) && !nonComplete.contains(child)){
-//                    nonComplete.add(child);
-//                }
-//            }
-//        }
-//
-//        nonComplete.remove(node);
-//        complete.add(node);
+public void renderPathNodes(Screen screen, Point2d offset, double scale){
+        if(selectedMap.getRootNode() == null){
+            return;
+        }
+        List<PathNode> flattenedNodes = selectedMap.getRootNode().flattenNodes();
+
+        for(PathNode n : flattenedNodes){
+        int size = 10;
+        int dx = (int)((n.getLocation().x * scale) + offset.x - (size / 2));
+        int dy = (int)((n.getLocation().y * scale) + offset.y - (size / 2));
+        screen.renderRect(dx, dy, size, size, 0xffeeff);
+    }
+
+
+    //draw our path points
+    List<PathNode> nonComplete = new ArrayList<>(Arrays.asList(selectedMap.getRootNode()));
+    List<PathNode> complete = new ArrayList<>();
+
+        while(!nonComplete.isEmpty()) {
+            PathNode node = nonComplete.get(0);
+            if (node.getChildNodes() != null) {
+                for (PathNode child : node.getChildNodes()) {
+                    Point2i p1 = RenderUtils.calculateRenderLocation(node.getLocation(), offset, scale);
+                    Point2i p2 = RenderUtils.calculateRenderLocation(child.getLocation(), offset, scale);
+
+                    screen.drawLine(p1.x, p1.y, p2.x, p2.y, 3, 0xfefefe);
+                    if (!complete.contains(child) && !nonComplete.contains(child)) {
+                        nonComplete.add(child);
+                    }
+                }
+            }
+
+            nonComplete.remove(node);
+            complete.add(node);
+        }
+}
+
 }

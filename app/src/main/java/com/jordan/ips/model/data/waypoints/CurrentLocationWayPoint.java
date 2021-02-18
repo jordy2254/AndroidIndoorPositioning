@@ -19,7 +19,7 @@ public class CurrentLocationWayPoint extends Waypoint<LocationService>{
 
     @Override
     public Point2d getLocation() {
-        return new Point2d(150,250);
+        return new Point2d(170,290);
     }
 
     @Override
@@ -39,7 +39,8 @@ public class CurrentLocationWayPoint extends Waypoint<LocationService>{
 
     @Override
     public PathNode getPathNode() {
-        return PathFindingUtils.createDynamicPathNode(map, getLocation(), 0);
+        //TODO dehardcode the floor
+        return PathFindingUtils.createDynamicPathNode(map, getLocation(), 1);
     }
 
     @Override
