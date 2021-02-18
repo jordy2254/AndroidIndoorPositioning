@@ -11,6 +11,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 
 import com.jordan.ips.R;
@@ -31,20 +32,28 @@ public class LocationSearchActivity extends AppCompatActivity {
     public static final int RESPONSE_CLEAR = 1;
     public static final int RESPONSE_ROOM = 2;
     public static final int RESPONSE_POINT_ON_MAP = 3;
+    public static final int RESPONSE_CURRENT_LOCATION = 4;
 
     MapWrapper map;
 
     EditText txtSearch;
+    Button btnCurrentLocation;
+    Button btnPointOnMap;
+
+
+    Button btnClear;
+
     RecyclerView lstResults;
     SearchResultRecyclerAdapter searchResultRecyclerAdapter;
     SearchResultRecyclerListener searchResultRecyclerListener;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_location_search);
         Intent intent = getIntent();
-
+        intent.getAction();
         MapWrapper map = (MapWrapper) intent.getSerializableExtra(MapActivity.INTENT_MAP);
         this.map = map;
         searchResultRecyclerAdapter = new SearchResultRecyclerAdapter(this, new ArrayList<>());
@@ -57,6 +66,30 @@ public class LocationSearchActivity extends AppCompatActivity {
             finish();
         };
 
+        btnCurrentLocation = findViewById(R.id.btnCurrentLocation);
+
+        btnCurrentLocation.setOnClickListener(v -> {
+            Intent intent1 = new Intent();
+            intent1.putExtra(EXTRA_RESULT_TYPE, RESPONSE_CURRENT_LOCATION);
+            setResult(Activity.RESULT_OK, intent1);
+            finish();
+        });
+
+        btnPointOnMap = findViewById(R.id.btnPointOnMap);
+        btnPointOnMap.setOnClickListener(v -> {
+            Intent intent1 = new Intent();
+            intent1.putExtra(EXTRA_RESULT_TYPE, RESPONSE_POINT_ON_MAP);
+            setResult(Activity.RESULT_OK, intent1);
+            finish();
+        });
+
+        btnClear = findViewById(R.id.btnClear);
+        btnClear.setOnClickListener(v -> {
+            Intent intent1 = new Intent();
+            intent1.putExtra(EXTRA_RESULT_TYPE, RESPONSE_CLEAR);
+            setResult(Activity.RESULT_OK, intent1);
+            finish();
+        });
         searchResultRecyclerAdapter.setSearchResultRecyclerListener(searchResultRecyclerListener);
         lstResults = findViewById(R.id.lstResults);
 

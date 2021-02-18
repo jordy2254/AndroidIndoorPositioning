@@ -19,6 +19,7 @@ import com.jordan.ips.model.data.MapWrapper;
 import com.jordan.ips.model.data.map.persisted.Floor;
 import com.jordan.ips.model.data.map.persisted.Room;
 import com.jordan.ips.model.data.pathfinding.PathNode;
+import com.jordan.ips.model.data.waypoints.CurrentLocationWayPoint;
 import com.jordan.ips.model.data.waypoints.RoomWaypoint;
 import com.jordan.ips.model.data.waypoints.Waypoint;
 import com.jordan.ips.model.pathfinding.AStarPathFindingAlgorithm;
@@ -169,12 +170,21 @@ public class MapActivity extends AppCompatActivity {
             return;
         }
 
-        Optional<Waypoint<?>> waypoint;
+        Optional<Waypoint<?>> waypoint = Optional.empty();
 
         switch (resultType){
             case LocationSearchActivity.RESPONSE_ROOM:
                 waypoint = extractRoomWaypointFromResult(data);
                 break;
+            case LocationSearchActivity.RESPONSE_CLEAR:
+                //TODO clear selection
+                return;
+            case LocationSearchActivity.RESPONSE_CURRENT_LOCATION:
+                waypoint = Optional.of(new CurrentLocationWayPoint(null, map.getMap()));
+                break;
+            case LocationSearchActivity.RESPONSE_POINT_ON_MAP:
+                //TODO interact with the canvas to detect a long press!
+                return;
             default:
                 Log.d("Result", "Unexprect result type from search activity");
                 return;
