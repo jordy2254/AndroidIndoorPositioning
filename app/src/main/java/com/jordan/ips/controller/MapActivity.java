@@ -7,7 +7,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -19,20 +18,18 @@ import com.jordan.ips.R;
 import com.jordan.ips.model.data.MapWrapper;
 import com.jordan.ips.model.data.map.persisted.Floor;
 import com.jordan.ips.model.data.map.persisted.Room;
-import com.jordan.ips.model.data.pathfinding.AStarNode;
 import com.jordan.ips.model.data.pathfinding.PathNode;
 import com.jordan.ips.model.data.waypoints.RoomWaypoint;
 import com.jordan.ips.model.data.waypoints.Waypoint;
-import com.jordan.ips.model.locationTracking.BluetoothScanner;
 import com.jordan.ips.model.pathfinding.AStarPathFindingAlgorithm;
 import com.jordan.ips.view.Canvas;
 import com.jordan.ips.view.recyclerAdapters.BasicRecyclerAdapter;
 import com.jordan.ips.view.renderable.MapRenderer;
 import com.jordan.ips.view.renderable.PathRenderer;
-import com.jordan.ips.view.renderable.RoomPolygonGenerator;
 import com.jordan.ips.view.renderable.WaypointRenderer;
 import com.jordan.renderengine.data.Point2d;
 
+import java.security.cert.PKIXRevocationChecker;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -160,10 +157,33 @@ public class MapActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         canvas.requestFocusFromTouch();
+
         if(resultCode != Activity.RESULT_OK){
             return;
         }
-        Optional<Waypoint<Room>> waypoint = extractRoomWaypointFromResult(data);
+
+        int resultType = data.getIntExtra(LocationSearchActivity.EXTRA_RESULT_TYPE, -1);
+
+        if(resultType == -1){
+            Log.d("Result", "Unexprect result type from search activity");
+            return;
+        }
+
+        Optional<Waypoint<?>> waypoint;
+
+        switch (resultType){
+            case LocationSearchActivity.RESPONSE_ROOM:
+                waypoint = extractRoomWaypointFromResult(data);
+                break;
+            default:
+                Log.d("Result", "Unexprect result type from search activity");
+                return;
+        }
+
+        if(!waypoint.isPresent()){
+            return;
+        }
+
         switch (requestCode){
             case START_POINT_SEARCH:
                 if(!waypoint.isPresent()){
@@ -171,7 +191,7 @@ public class MapActivity extends AppCompatActivity {
                 }
                 setStartWaypoint(waypoint.get());
 
-                txtStartPoint.setText(waypoint.get().getPoint().getName());
+                txtStartPoint.setText(waypoint.get().getName());
                 canvas.requestFocusFromTouch();
                 break;
             case END_POINT_SEARCH:
@@ -180,7 +200,7 @@ public class MapActivity extends AppCompatActivity {
                 }
                 setEndWaypoint(waypoint.get());
 
-                txtTarget.setText(waypoint.get().getPoint().getName());
+                txtTarget.setText(waypoint.get().getName());
 
                 break;
             default:
@@ -188,8 +208,8 @@ public class MapActivity extends AppCompatActivity {
         }
     }
 
-    private Optional<Waypoint<Room>> extractRoomWaypointFromResult(Intent data){
-        Room selRoom = (Room) data.getSerializableExtra(LocationSearchActivity.EXTRA_RESULT);
+    private Optional<Waypoint<?>> extractRoomWaypointFromResult(Intent data){
+        Room selRoom = (Room) data.getSerializableExtra(LocationSearchActivity.EXTRA_ROOM_RESULT);
         long selectedId = selRoom.getId();
 
         Optional<Room> room = map.findRoomById(selectedId);
@@ -198,6 +218,9 @@ public class MapActivity extends AppCompatActivity {
             return Optional.empty();
         }
         Waypoint<Room> waypoint = new RoomWaypoint(room.get());
+        if(map.getMap().getRootNode() == null){
+            return Optional.empty();
+        }
         Optional<PathNode> node = map.getMap().getRootNode().flattenNodes()
                 .stream()
                 .filter(pathNode -> room.get().isPointInRoom(pathNode.getLocation()))

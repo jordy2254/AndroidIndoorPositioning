@@ -29,4 +29,6 @@ public abstract class Waypoint<T> {
     public void setPathNode(PathNode pathNode) {
         this.pathNode = pathNode;
     }
+
+    public abstract String getName();
 }

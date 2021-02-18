@@ -29,4 +29,9 @@ public class MapWaypoint extends Waypoint<Point2d> {
     public void toggleSelected() {
         this.selected = !selected;
     }
+
+    @Override
+    public String getName() {
+        return "Point on map";
+    }
 }

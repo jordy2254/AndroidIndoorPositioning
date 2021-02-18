@@ -25,7 +25,12 @@ import java.util.stream.Collectors;
 
 public class LocationSearchActivity extends AppCompatActivity {
 
-    public static final String EXTRA_RESULT = "SELECTEDROOM";
+    public static final String EXTRA_RESULT_TYPE = "RESULTTYPE";
+    public static final String EXTRA_ROOM_RESULT = "SELECTEDROOM";
+
+    public static final int RESPONSE_CLEAR = 1;
+    public static final int RESPONSE_ROOM = 2;
+    public static final int RESPONSE_POINT_ON_MAP = 3;
 
     MapWrapper map;
 
@@ -46,7 +51,8 @@ public class LocationSearchActivity extends AppCompatActivity {
 
         searchResultRecyclerListener = room -> {
             Intent intent1 = new Intent();
-            intent1.putExtra(EXTRA_RESULT, room);
+            intent1.putExtra(EXTRA_ROOM_RESULT, room);
+            intent1.putExtra(EXTRA_RESULT_TYPE, RESPONSE_ROOM);
             setResult(Activity.RESULT_OK, intent1);
             finish();
         };

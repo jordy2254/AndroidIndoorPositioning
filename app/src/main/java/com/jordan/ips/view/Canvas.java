@@ -68,8 +68,10 @@ public class Canvas extends RenderView implements View.OnTouchListener, ScaleGes
 
     @Override
     public void render() {
-        for(Renderable r : renderables){
-            r.render(screen, new Point2d(xOff, yOff), scale);
+        synchronized (renderables){
+            for(Renderable r : renderables){
+                r.render(screen, new Point2d(xOff, yOff), scale);
+            }
         }
     }
 
@@ -82,8 +84,10 @@ public class Canvas extends RenderView implements View.OnTouchListener, ScaleGes
         canvas.drawRect(new Rect(0,150,250,225), paint);
         paint.setColor(Color.BLACK);
         canvas.drawText("FPS | UPS " + fpsUP1 + " | " + upsUp1, 10,200, paint);
-        for (Drawable d: drawables) {
-            d.draw(canvas, new Point2d(xOff, yOff), scale);
+        synchronized (drawables){
+            for (Drawable d: drawables) {
+                d.draw(canvas, new Point2d(xOff, yOff), scale);
+            }
         }
     }
 

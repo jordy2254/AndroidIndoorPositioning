@@ -1,36 +1,36 @@
 package com.jordan.ips.model.data.waypoints;
 
-import com.jordan.ips.model.data.map.persisted.Room;
+import com.jordan.ips.model.LocationService;
 import com.jordan.renderengine.data.Point2d;
 
-public class RoomWaypoint extends Waypoint<Room>{
+public class CurrentLocationWayPoint extends Waypoint<LocationService>{
 
-    public RoomWaypoint(Room point) {
+    public CurrentLocationWayPoint(LocationService point) {
         super(point);
     }
 
     @Override
     public Point2d getLocation() {
-        return point.getLocation();
+        return null;
     }
 
     @Override
     public boolean isSelected() {
-        return point.isSelected();
+        return false;
     }
 
     @Override
     public void setSelected(boolean selected) {
-        point.setSelected(selected);
+
     }
 
     @Override
     public void toggleSelected() {
-        point.setSelected(!point.isSelected());
+
     }
 
     @Override
     public String getName() {
-        return point.getName();
+        return "Current Location";
     }
 }
