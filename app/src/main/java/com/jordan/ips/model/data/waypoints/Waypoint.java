@@ -5,7 +5,7 @@ import com.jordan.renderengine.data.Point2d;
 
 public abstract class Waypoint<T> {
 
-    T point;
+    final T point;
     PathNode pathNode;
 
     public Waypoint(T point) {

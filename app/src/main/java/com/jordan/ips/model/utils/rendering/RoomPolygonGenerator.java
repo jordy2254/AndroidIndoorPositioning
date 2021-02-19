@@ -5,10 +5,8 @@ import com.jordan.ips.model.data.map.persisted.Room;
 import com.jordan.ips.model.data.map.persisted.RoomIndent;
 import com.jordan.ips.model.exceptions.InvalidLocationException;
 import com.jordan.ips.model.utils.IndentLocationFinder;
-import com.jordan.renderengine.Screen;
 import com.jordan.renderengine.data.Pair;
 import com.jordan.renderengine.data.Point2d;
-import com.jordan.renderengine.graphics.Renderable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,23 +19,18 @@ public class RoomPolygonGenerator {
 
     public static List<Point2d> createPolygon(Room room){
         List<Pair<Point2d,Point2d>> walls = calculateWalls(room);
-        List<Point2d> polygon = createPolygon(room, walls);
-        return polygon;
+        return createPolygon(room, walls);
     }
 
     public static List<Point2d>  translate(List<Point2d> points, Point2d translation){
         List<Point2d> nPoints = new ArrayList<>();
-        points.forEach(point2d -> {
-            nPoints.add(point2d.add(translation));
-        });
+        points.forEach(point2d -> nPoints.add(point2d.add(translation)));
         return nPoints;
     }
 
     public static List<Point2d> scale(List<Point2d> points, double scale) {
         List<Point2d> nPoints = new ArrayList<>();
-        points.forEach(point2d -> {
-            nPoints.add(point2d.multiply(new Point2d(scale, scale)));
-        });
+        points.forEach(point2d -> nPoints.add(point2d.multiply(new Point2d(scale, scale))));
         return nPoints;
     }
 
@@ -150,8 +143,7 @@ public class RoomPolygonGenerator {
 
     public static List<Pair<Point2d, Point2d>> calculateWalls(Room room) {
         //calculate all indent edges
-        List<Pair<Point2d,Point2d>> roomEdges = new ArrayList<>();
-        roomEdges.addAll(calculateRectangleEdgePairs(0, 0, room.getDimensions().x, room.getDimensions().y));
+        List<Pair<Point2d, Point2d>> roomEdges = new ArrayList<>(calculateRectangleEdgePairs(0, 0, room.getDimensions().x, room.getDimensions().y));
         List<Pair<Point2d,Point2d>> indentEdges = new ArrayList<>();
 
 

@@ -9,7 +9,7 @@ import com.jordan.renderengine.data.Point2d;
 public class CurrentLocationWayPoint extends Waypoint<LocationService>{
 
     private boolean selected = false;
-    private Map map;
+    private final Map map;
 
     public CurrentLocationWayPoint(LocationService point, Map map) {
         super(point);

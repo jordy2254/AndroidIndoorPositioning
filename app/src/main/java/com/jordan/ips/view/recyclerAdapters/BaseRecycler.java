@@ -8,15 +8,13 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.jordan.ips.controller.MainActivity;
-
 import java.util.List;
 
 public abstract class BaseRecycler<T, R extends RecyclerView.ViewHolder> extends RecyclerView.Adapter<R> {
 
     protected List<T> data;
-    protected LayoutInflater inflater;
-    protected Context context;
+    protected final LayoutInflater inflater;
+    protected final Context context;
 
     private final int viewId;
 

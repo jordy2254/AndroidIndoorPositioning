@@ -1,7 +1,5 @@
 package com.jordan.ips.model.locationTracking;
 
-import com.jordan.ips.model.data.map.persisted.Sensor;
-
 import java.util.ArrayList;
 import java.util.List;
 

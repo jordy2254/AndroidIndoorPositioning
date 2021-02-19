@@ -2,7 +2,6 @@ package com.jordan.ips.view.mapSyncronisation;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -35,25 +34,19 @@ public class MapSyncronisationDialog extends DialogFragment {
 
 
         builder.setView(view)
-                .setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        mapName = txtMapName.getText().toString();
-                        mapPassword = txtMapPass.getText().toString();
-                        success = true;
-                        dismiss();
-                        if(mapSyncronisationDialogConfirmListener != null){
-                            mapSyncronisationDialogConfirmListener.onMapInputDialogSuccessListener(mapName, mapPassword);
-                        }
+                .setPositiveButton(R.string.confirm, (dialog, which) -> {
+                    mapName = txtMapName.getText().toString();
+                    mapPassword = txtMapPass.getText().toString();
+                    success = true;
+                    dismiss();
+                    if(mapSyncronisationDialogConfirmListener != null){
+                        mapSyncronisationDialogConfirmListener.onMapInputDialogSuccessListener(mapName, mapPassword);
+                    }
 
-                    }
                 })
-                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        success = false;
-                        dismiss();
-                    }
+                .setNegativeButton(R.string.cancel, (dialog, which) -> {
+                    success = false;
+                    dismiss();
                 });
         return builder.create();
     }

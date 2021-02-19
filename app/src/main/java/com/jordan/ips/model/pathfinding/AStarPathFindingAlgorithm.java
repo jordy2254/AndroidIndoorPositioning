@@ -71,26 +71,22 @@ public class AStarPathFindingAlgorithm {
     }
 
     public float calculateEuclidian(double x1, double y1, double x2, double y2) {
-        float result = (float) Math.sqrt( ((y1 - y2) * (y1 - y2))+ ((x1 - x2) * (x1 - x2)));
-        return result;
+        return (float) Math.sqrt( ((y1 - y2) * (y1 - y2))+ ((x1 - x2) * (x1 - x2)));
     }
 
-    private final Comparator<AStarNode> nodeSorter = new Comparator<AStarNode>() {
-        @Override
-        public int compare(AStarNode n0, AStarNode n1) {
-            if(n1.fCost < n0.fCost){
+    private final Comparator<AStarNode> nodeSorter = (n0, n1) -> {
+        if(n1.fCost < n0.fCost){
+            return 1;
+        }else if(n1.fCost > n0.fCost){
+            return -1;
+        }else if(n1.fCost == n0.fCost){
+            if(n1.gCost < n0.gCost){
                 return 1;
-            }else if(n1.fCost > n0.fCost){
+            }else if(n1.gCost > n0.gCost){
                 return -1;
-            }else if(n1.fCost == n0.fCost){
-                if(n1.gCost < n0.gCost){
-                    return 1;
-                }else if(n1.gCost > n0.gCost){
-                    return -1;
-                }
             }
-            return 0;
         }
+        return 0;
     };
 
     public void step() {

@@ -2,7 +2,7 @@ package com.jordan.ips.model.data.pathfinding;
 
 public class AStarNode {
 
-    public PathNode pathNode;
+    public final PathNode pathNode;
     public AStarNode parent;
     public int gCost, hCost, fCost;
 

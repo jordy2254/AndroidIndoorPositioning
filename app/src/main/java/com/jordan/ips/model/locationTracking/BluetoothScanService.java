@@ -6,7 +6,6 @@ import android.bluetooth.le.ScanFilter;
 import android.bluetooth.le.ScanResult;
 import android.bluetooth.le.ScanSettings;
 import android.os.ParcelUuid;
-import android.os.strictmode.InstanceCountViolation;
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -24,7 +23,7 @@ public class BluetoothScanService extends ScanCallback {
     static final ParcelUuid serviceUid = ParcelUuid.fromString("0000FEAA-0000-1000-8000-00805F9B34FB");
 
     static final BluetoothAdapter mAdapter = BluetoothAdapter.getDefaultAdapter();
-    private Map<String, Integer[]> sensorData = new HashMap<>();
+    private final Map<String, Integer[]> sensorData = new HashMap<>();
 
 
     private BluetoothScanService() {
@@ -96,17 +95,17 @@ public class BluetoothScanService extends ScanCallback {
     }
 
     public static String convertToHex(byte[] data) {
-        StringBuffer buf = new StringBuffer();
-        for (int i = 0; i < data.length; i++) {
-            int halfbyte = (data[i] >>> 4) & 0x0F;
+        StringBuilder buf = new StringBuilder();
+        for (byte datum : data) {
+            int halfbyte = (datum >>> 4) & 0x0F;
             int two_halfs = 0;
             do {
                 if ((0 <= halfbyte) && (halfbyte <= 9))
                     buf.append((char) ('0' + halfbyte));
                 else
                     buf.append((char) ('a' + (halfbyte - 10)));
-                halfbyte = data[i] & 0x0F;
-            } while(two_halfs++ < 1);
+                halfbyte = datum & 0x0F;
+            } while (two_halfs++ < 1);
         }
         return buf.toString();
     }

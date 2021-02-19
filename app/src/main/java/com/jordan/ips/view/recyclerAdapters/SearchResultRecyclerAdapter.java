@@ -33,7 +33,7 @@ public class SearchResultRecyclerAdapter extends BaseRecycler<Room, SearchResult
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        TextView txtRecyclerData;
+        final TextView txtRecyclerData;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);

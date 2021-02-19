@@ -98,12 +98,7 @@ public class LocationSearchActivity extends AppCompatActivity {
 
         txtSearch = findViewById(R.id.txtSearch);
         txtSearch.requestFocusFromTouch();
-        txtSearch.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                lstResults.setVisibility(hasFocus ? View.VISIBLE : View.GONE);
-            }
-        });
+        txtSearch.setOnFocusChangeListener((v, hasFocus) -> lstResults.setVisibility(hasFocus ? View.VISIBLE : View.GONE));
 
         txtSearch.addTextChangedListener(new TextWatcher() {
             @Override

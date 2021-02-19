@@ -6,9 +6,9 @@ import com.jordan.ips.view.recyclerAdapters.BaseRecycler;
 
 public class BaseMapSyncronisedCallback implements MapSyncronsiedCallBack {
 
-    BaseRecycler recycler;
+    private final BaseRecycler<?,?> recycler;
 
-    public BaseMapSyncronisedCallback(BaseRecycler recycler) {
+    public BaseMapSyncronisedCallback(BaseRecycler<?,?> recycler) {
         this.recycler = recycler;
     }
 

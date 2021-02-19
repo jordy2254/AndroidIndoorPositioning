@@ -3,10 +3,8 @@ package com.jordan.ips.model.data;
 import android.content.Context;
 
 import com.google.gson.Gson;
-import com.jordan.ips.model.data.map.persisted.Map;
 
 import java.io.File;
-import java.io.FileFilter;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -47,7 +45,6 @@ public class FileManager {
             fw.close();
         } catch (IOException e) {
             e.printStackTrace();
-            return;
         }
     }
 

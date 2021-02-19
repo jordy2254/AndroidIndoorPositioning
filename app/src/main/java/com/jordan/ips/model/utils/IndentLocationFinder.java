@@ -15,7 +15,7 @@ public class IndentLocationFinder {
      * @return
      * @throws InvalidLocationException
      */
-    public static final Point2d findStartPointsOfIndent(Room room, RoomIndent indent, boolean ignoreLocation) throws InvalidLocationException {
+    public static Point2d findStartPointsOfIndent(Room room, RoomIndent indent, boolean ignoreLocation) throws InvalidLocationException {
         if (!indent.getWallKeyA().isEmpty() && !indent.getWallKeyB().isEmpty()) {
 
             double xStart = 0;

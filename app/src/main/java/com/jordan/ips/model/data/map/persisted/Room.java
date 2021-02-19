@@ -4,9 +4,6 @@ import java.io.Serializable;
 import java.util.List;
 
 import com.jordan.renderengine.data.Point2d;
-import com.jordan.ips.model.utils.IndentLocationFinder;
-
-import com.jordan.ips.model.exceptions.InvalidLocationException;
 
 
 public class Room implements Serializable {

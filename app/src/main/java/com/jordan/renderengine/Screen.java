@@ -5,9 +5,7 @@ import com.jordan.renderengine.data.Point2i;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.function.Function;
 
 public class Screen {
 
@@ -58,9 +56,7 @@ public class Screen {
     }
 
     public void clear(){
-        for (int i = 0; i < pixels.length; i++) {
-            pixels[i] = clearColor;
-        }
+        Arrays.fill(pixels, clearColor);
     }
 
     public void drawLine(int x0, int y0, int x1, int y1, int color){

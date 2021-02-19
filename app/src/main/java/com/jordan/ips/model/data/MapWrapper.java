@@ -5,9 +5,7 @@ import com.jordan.ips.model.data.map.persisted.Room;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 public class MapWrapper implements Serializable {
 

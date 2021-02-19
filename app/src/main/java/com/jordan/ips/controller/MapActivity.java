@@ -31,7 +31,6 @@ import com.jordan.ips.view.renderable.PathRenderer;
 import com.jordan.ips.view.renderable.WaypointRenderer;
 import com.jordan.renderengine.data.Point2d;
 
-import java.security.cert.PKIXRevocationChecker;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -51,8 +50,8 @@ public class MapActivity extends AppCompatActivity {
 
     MapWrapper map;
 
-    Waypoint startWaypoint = null;
-    Waypoint endWaypoint = null;
+    Waypoint<?> startWaypoint = null;
+    Waypoint<?> endWaypoint = null;
 
     WaypointRenderer startPointRenderer;
     WaypointRenderer endPointRenderer;
@@ -129,7 +128,7 @@ public class MapActivity extends AppCompatActivity {
                 .sorted(Integer::compareTo)
                 .collect(Collectors.toList());
 
-        List<String> stringValues = floorIndexes.stream().map(integer -> String.valueOf(integer)).collect(Collectors.toList());
+        List<String> stringValues = floorIndexes.stream().map(String::valueOf).collect(Collectors.toList());
         floorsAdapter = new BasicRecyclerAdapter(getApplicationContext(), stringValues);
 
         lstFloors = findViewById(R.id.lstFloors);
@@ -234,18 +233,14 @@ public class MapActivity extends AppCompatActivity {
         }
         Optional<PathNode> node = map.getMap().getRootNode().flattenNodes()
                 .stream()
-                .filter(pathNode -> MapUtils.isPointInRoom(map.getMap(), room.get(), pathNode.getLocation()))
-                .sorted(
-                        (o1, o2) -> {
-                            Point2d roomCenter = room.get().getDimensions().divide(new Point2d(2,2)).add(room.get().getLocation());
+                .filter(pathNode -> MapUtils.isPointInRoom(map.getMap(), room.get(), pathNode.getLocation())).min((o1, o2) -> {
+                    Point2d roomCenter = room.get().getDimensions().divide(new Point2d(2, 2)).add(room.get().getLocation());
 
-                            float euclidian1 = (float) Math.sqrt( ((o1.getLocation().y - roomCenter.y) * (o1.getLocation().y - roomCenter.y))+ ((o1.getLocation().x - roomCenter.x * (o1.getLocation().x - roomCenter.x))));
-                            float euclidian2 = (float) Math.sqrt( ((o2.getLocation().y - roomCenter.y) * (o2.getLocation().y - roomCenter.y))+ ((o2.getLocation().x - roomCenter.x * (o2.getLocation().x - roomCenter.x))));
+                    float euclidian1 = (float) Math.sqrt(((o1.getLocation().y - roomCenter.y) * (o1.getLocation().y - roomCenter.y)) + ((o1.getLocation().x - roomCenter.x * (o1.getLocation().x - roomCenter.x))));
+                    float euclidian2 = (float) Math.sqrt(((o2.getLocation().y - roomCenter.y) * (o2.getLocation().y - roomCenter.y)) + ((o2.getLocation().x - roomCenter.x * (o2.getLocation().x - roomCenter.x))));
 
-                            return (int) (euclidian1 - euclidian2);
-                        }
-                )
-                .findFirst();
+                    return (int) (euclidian1 - euclidian2);
+                });
         if(!node.isPresent()){
             return Optional.empty();
         }
@@ -253,7 +248,7 @@ public class MapActivity extends AppCompatActivity {
         return Optional.of(waypoint);
     }
 
-    public void setStartWaypoint(Waypoint startWaypoint) {
+    public void setStartWaypoint(Waypoint<?> startWaypoint) {
         if(this.startWaypoint != null){
             this.startWaypoint.setSelected(false);
             canvas.removeRenderable(startPointRenderer);
@@ -265,7 +260,7 @@ public class MapActivity extends AppCompatActivity {
         updateLayout();
     }
 
-    public void setEndWaypoint(Waypoint endWaypoint) {
+    public void setEndWaypoint(Waypoint<?> endWaypoint) {
         if(this.endWaypoint != null){
             this.endWaypoint.setSelected(false);
             canvas.removeRenderable(endPointRenderer);

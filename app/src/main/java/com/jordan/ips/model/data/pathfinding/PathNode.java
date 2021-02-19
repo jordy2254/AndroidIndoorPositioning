@@ -6,6 +6,7 @@ import com.jordan.renderengine.data.Point2d;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 
@@ -57,7 +58,7 @@ public class PathNode implements Serializable {
     }
 
     public List<PathNode> flattenNodes(){
-        List<PathNode> nonComplete = new ArrayList<>(Arrays.asList(this));
+        List<PathNode> nonComplete = new ArrayList<>(Collections.singletonList(this));
         List<PathNode> complete = new ArrayList<>();
 
         while(!nonComplete.isEmpty()){

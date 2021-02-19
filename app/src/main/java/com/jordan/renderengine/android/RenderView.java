@@ -14,7 +14,6 @@ import android.view.inputmethod.InputMethodManager;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.jordan.ips.model.data.map.persisted.Map;
 import com.jordan.renderengine.Screen;
 
 public abstract class RenderView extends SurfaceView implements Runnable, SurfaceHolder.Callback, View.OnFocusChangeListener {
@@ -27,7 +26,7 @@ public abstract class RenderView extends SurfaceView implements Runnable, Surfac
     protected int fps = 0, ups = 0, fpsUP1, upsUp1;
 
     private int width, height;
-    private Bitmap renderOuput;
+    private Bitmap renderOutput;
 
     public RenderView(Context context) {
         super(context);
@@ -48,7 +47,7 @@ public abstract class RenderView extends SurfaceView implements Runnable, Surfac
     @Override
     public synchronized void run() {
         long lasttime = System.nanoTime();
-        final double ns = 1000000000 / fpsLOCK;
+        final double ns = 1000000000F / fpsLOCK;
         double delta = 0;
         long timer = System.currentTimeMillis();
 
@@ -77,8 +76,8 @@ public abstract class RenderView extends SurfaceView implements Runnable, Surfac
 
                 render();
 
-                renderOuput.setPixels(screen.getPixels(), 0, width, 0,0,width,height);
-                canvas.drawBitmap(renderOuput, 0,0, null);
+                renderOutput.setPixels(screen.getPixels(), 0, width, 0,0,width,height);
+                canvas.drawBitmap(renderOutput, 0,0, null);
                 drawFrame(canvas);
                 getHolder().unlockCanvasAndPost(canvas);
             }
@@ -104,7 +103,7 @@ public abstract class RenderView extends SurfaceView implements Runnable, Surfac
         screen.setSize(w,h);
 
         Bitmap.Config conf = Bitmap.Config.RGB_565;
-        renderOuput = Bitmap.createBitmap(w, h, conf);
+        renderOutput = Bitmap.createBitmap(w, h, conf);
     }
 
     public void start(){

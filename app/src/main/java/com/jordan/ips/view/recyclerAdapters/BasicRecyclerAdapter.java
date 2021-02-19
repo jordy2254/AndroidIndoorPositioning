@@ -9,9 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.jordan.ips.R;
-import com.jordan.ips.model.data.map.persisted.Room;
 import com.jordan.ips.view.recyclerAdapters.listeners.BasicRecyclerAdapterListener;
-import com.jordan.ips.view.recyclerAdapters.listeners.SearchResultRecyclerListener;
 
 import java.util.List;
 
@@ -41,7 +39,7 @@ public class BasicRecyclerAdapter extends BaseRecycler<String, BasicRecyclerAdap
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        TextView txtFloorNumber;
+        final TextView txtFloorNumber;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);

@@ -5,27 +5,16 @@ import android.content.Context;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.android.volley.AuthFailureError;
-import com.android.volley.Request;
-import com.android.volley.Request.Method;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.toolbox.JsonArrayRequest;
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 import com.jordan.ips.model.data.FileManager;
 import com.jordan.ips.model.data.MapWrapper;
 import com.jordan.ips.model.data.map.persisted.Map;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Date;
-import java.util.HashMap;
 
 import static com.android.volley.Request.Method.*;
 
@@ -43,9 +32,7 @@ public class MapSyncronisationUtil {
             Gson gson = new Gson();
             Map map = gson.fromJson(resp, Map.class);
             callBack.syncronisationComplete(map);
-        }, err->{
-            callBack.syncronisationFailed();
-        }){
+        }, err-> callBack.syncronisationFailed()){
             @Override
             public String getBodyContentType() {
                 return "application/json";

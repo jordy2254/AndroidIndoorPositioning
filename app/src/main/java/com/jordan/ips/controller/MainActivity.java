@@ -91,13 +91,11 @@ public class MainActivity extends AppCompatActivity implements MapSyncronisation
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle item selection
-        switch (item.getItemId()) {
-            case R.id.action_sync_new_map:
-                input.show(fm, "sync_new_map");
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+        if (item.getItemId() == R.id.action_sync_new_map) {
+            input.show(fm, "sync_new_map");
+            return true;
         }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -131,7 +129,6 @@ public class MainActivity extends AppCompatActivity implements MapSyncronisation
             }
         });
 
-        //TODO optimise this with a DTO, holding only the contents needed for the list rather than the whole map
         mapRecyclerAdapter.add(mapWrapper);
         checkMapState();
     }
@@ -144,7 +141,6 @@ public class MainActivity extends AppCompatActivity implements MapSyncronisation
             Toast.makeText(getApplicationContext(), "This map hasn't successfully synced yet", Toast.LENGTH_SHORT).show();
             return;
         }
-        //TODO when implementing db send over map wrapper ID and load the map.
         intent.putExtra(MapActivity.INTENT_MAP, map);
         startActivity(intent);
     }

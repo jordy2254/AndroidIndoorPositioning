@@ -17,7 +17,6 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
         <activity android:name=".controller.LocationSearchActivity"></activity>
-        <activity android:name=".controller.BeaconScanningActivity" />
         <activity android:name=".controller.MapActivity" />
         <activity android:name=".controller.LocationActivity" />
         <activity android:name=".controller.MainActivity">

@@ -8,7 +8,6 @@ import com.jordan.ips.model.data.map.persisted.RoomIndent;
 import com.jordan.ips.model.exceptions.InvalidLocationException;
 import com.jordan.renderengine.data.Point2d;
 
-import java.util.List;
 import java.util.Optional;
 
 public class MapUtils {

@@ -6,14 +6,12 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.View;
 
 import androidx.annotation.Nullable;
 
-import com.jordan.ips.model.locationTracking.BluetoothScanner;
 import com.jordan.renderengine.data.Point2d;
 import com.jordan.renderengine.android.RenderView;
 import com.jordan.renderengine.Screen;
@@ -26,7 +24,7 @@ import java.util.List;
 
 public class Canvas extends RenderView implements View.OnTouchListener, ScaleGestureDetector.OnScaleGestureListener{
 
-    Screen screen = Screen.getInstance();
+    final Screen screen = Screen.getInstance();
 
     private double xOff = 0;
     private double yOff = 0;
@@ -41,9 +39,9 @@ public class Canvas extends RenderView implements View.OnTouchListener, ScaleGes
     ScaleGestureDetector mScaleDetector;
 
     Bitmap renderOuput;
-    List<Renderable> renderables = new ArrayList<>();
-    List<Updatable> updatables = new ArrayList<>();
-    List<Drawable> drawables = new ArrayList<>();
+    final List<Renderable> renderables = new ArrayList<>();
+    final List<Updatable> updatables = new ArrayList<>();
+    final List<Drawable> drawables = new ArrayList<>();
 
     public Canvas(Context context) {
         super(context);
@@ -93,12 +91,7 @@ public class Canvas extends RenderView implements View.OnTouchListener, ScaleGes
 
     @Override
     protected void secondTimer() {
-        java.util.Map<String, Integer[]> sensors = BluetoothScanner.sensorData;
-        for (String key : sensors.keySet()) {
-            double distance = BluetoothScanner.calculateDistanceInCm(key);
 
-            Log.i("Distance", String.format("Sensor: %s, Distance: " + distance, key));
-        }
     }
 
     public void init(Context context){

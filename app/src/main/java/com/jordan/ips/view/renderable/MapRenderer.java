@@ -4,7 +4,6 @@ import com.jordan.ips.model.data.map.persisted.Map;
 import com.jordan.ips.model.data.pathfinding.PathNode;
 import com.jordan.ips.model.utils.rendering.RoomPolygonGenerator;
 import com.jordan.renderengine.Screen;
-import com.jordan.renderengine.data.Pair;
 import com.jordan.renderengine.data.Point2d;
 import com.jordan.renderengine.data.Point2i;
 import com.jordan.renderengine.graphics.Renderable;
@@ -12,6 +11,7 @@ import com.jordan.renderengine.utils.RenderUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -20,7 +20,7 @@ public class MapRenderer implements Renderable {
     private int selectedFloorIndex = 0;
     private final Map selectedMap;
 
-    java.util.Map<Long, List<Point2d>> roomPolygonCache = new HashMap<>();
+    final java.util.Map<Long, List<Point2d>> roomPolygonCache = new HashMap<>();
 
     public MapRenderer(Map selectedMap) {
         this.selectedMap = selectedMap;
@@ -89,7 +89,7 @@ public void renderPathNodes(Screen screen, Point2d offset, double scale){
 
 
     //draw our path points
-    List<PathNode> nonComplete = new ArrayList<>(Arrays.asList(selectedMap.getRootNode()));
+    List<PathNode> nonComplete = new ArrayList<>(Collections.singletonList(selectedMap.getRootNode()));
     List<PathNode> complete = new ArrayList<>();
 
         while(!nonComplete.isEmpty()) {

@@ -11,12 +11,9 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.jordan.ips.R;
-import com.jordan.ips.controller.MainActivity;
 import com.jordan.ips.model.api.MapSyncronisationUtil;
-import com.jordan.ips.model.api.MapSyncronsiedCallBack;
 import com.jordan.ips.model.data.FileManager;
 import com.jordan.ips.model.data.MapWrapper;
-import com.jordan.ips.model.data.map.persisted.Map;
 import com.jordan.ips.view.mapSyncronisation.BaseMapSyncronisedCallback;
 import com.jordan.ips.view.recyclerAdapters.listeners.MapRecyclerAdapterListener;
 
@@ -78,11 +75,13 @@ public class MapRecyclerAdapter extends BaseRecycler<MapWrapper, MapRecyclerAdap
 
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        TextView mapName, mapDescription, lastSyncDate;
-        ImageView mapIcon;
-        ProgressBar pb;
-        ImageButton btnDelete;
-        ImageButton btnSync;
+        final TextView mapName;
+        final TextView mapDescription;
+        final TextView lastSyncDate;
+        final ImageView mapIcon;
+        final ProgressBar pb;
+        final ImageButton btnDelete;
+        final ImageButton btnSync;
 
         ViewHolder(View itemView) {
             super(itemView);

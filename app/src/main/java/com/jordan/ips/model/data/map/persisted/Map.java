@@ -5,7 +5,6 @@ import com.jordan.ips.model.data.pathfinding.persisted.MapEdge;
 import com.jordan.ips.model.data.pathfinding.persisted.MapNode;
 
 import java.io.Serializable;
-import java.security.cert.PKIXRevocationChecker;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
