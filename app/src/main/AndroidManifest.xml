@@ -15,10 +15,10 @@
         android:networkSecurityConfig="@xml/network_security_config"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+        android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+        android:fullBackupContent="@xml/backup_descriptor">
         <activity android:name=".controller.LocationSearchActivity"></activity>
         <activity android:name=".controller.MapActivity" />
-        <activity android:name=".controller.LocationActivity" />
         <activity android:name=".controller.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

@@ -9,7 +9,7 @@ import com.android.volley.toolbox.Volley;
 public class MyRequestQueue {
     private static MyRequestQueue instance;
     private RequestQueue requestQueue;
-    private static Context ctx;
+    private Context ctx;
 
     private MyRequestQueue(Context context) {
         ctx = context;

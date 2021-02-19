@@ -40,7 +40,7 @@
                 android:ems="10"
                 android:hint="Search Location"
                 android:inputType="text"
-                android:padding="25px" />
+                android:padding="10dp" />
         </LinearLayout>
     </FrameLayout>
 
@@ -87,7 +87,7 @@
             android:ems="10"
             android:hint="Search start Location"
             android:inputType="text"
-            android:padding="25px" />
+            android:padding="10dp" />
 
     </LinearLayout>
         <Button
