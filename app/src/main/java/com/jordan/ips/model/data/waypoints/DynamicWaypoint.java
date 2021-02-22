@@ -11,9 +11,10 @@ public class DynamicWaypoint extends Waypoint<Point2d>{
     private boolean selected = false;
     private final Map map;
 
+    private PathNode pathNode;
+
     public DynamicWaypoint(Point2d point, Map map) {
         super(point);
-        this.pathNode = new PathNode(getLocation());
         this.map = map;
     }
 
@@ -30,17 +31,26 @@ public class DynamicWaypoint extends Waypoint<Point2d>{
     @Override
     public void setSelected(boolean selected) {
         this.selected = selected;
+        if(!this.selected && pathNode != null){
+            PathFindingUtils.unlinkDynamicPathNode(pathNode);
+        }
     }
 
     @Override
     public void toggleSelected() {
         this.selected = !selected;
+        if(!this.selected && pathNode != null){
+            PathFindingUtils.unlinkDynamicPathNode(pathNode);
+        }
     }
 
     @Override
     public PathNode getPathNode() {
-        //TODO dehardcode the floor
-        return PathFindingUtils.createDynamicPathNode(map, getLocation(), 1);
+        if (pathNode == null) {
+            //TODO dehardcode the floor
+            pathNode = PathFindingUtils.createDynamicPathNode(map, getLocation(), 1);
+        }
+        return pathNode;
     }
 
     @Override

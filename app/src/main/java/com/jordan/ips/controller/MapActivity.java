@@ -145,6 +145,7 @@ public class MapActivity extends AppCompatActivity implements LongTouchListener 
             mapRenderer.setSelectedFloorIndex(floorIndexes.get(position));
         });
         canvas.addRenderable(mapRenderer);
+        canvas.setLongTouchListener(this);
 
         updateLayout();
 
@@ -180,12 +181,14 @@ public class MapActivity extends AppCompatActivity implements LongTouchListener 
                 break;
             case LocationSearchActivity.RESPONSE_CLEAR:
                 //TODO clear selection
+                setStartWaypoint(null);
+                setEndWaypoint(null);
                 return;
             case LocationSearchActivity.RESPONSE_CURRENT_LOCATION:
                 waypoint = Optional.of(new CurrentLocationWayPoint(null, mapWrapper.getMap()));
                 break;
             case LocationSearchActivity.RESPONSE_POINT_ON_MAP:
-                //TODO interact with the canvas to detect a long press!
+                //TODO interact with the canvas to+ detect a long press!
                 return;
             default:
                 Log.d("Result", "Unexprect result type from search activity");
@@ -203,17 +206,12 @@ public class MapActivity extends AppCompatActivity implements LongTouchListener 
                 }
                 setStartWaypoint(waypoint.get());
 
-                txtStartPoint.setText(waypoint.get().getName());
-                canvas.requestFocusFromTouch();
                 break;
             case END_POINT_SEARCH:
                 if(!waypoint.isPresent()){
                     return;
                 }
                 setEndWaypoint(waypoint.get());
-
-                txtTarget.setText(waypoint.get().getName());
-
                 break;
             default:
                 Log.w("SEARCH", "No handler for request code: " + requestCode);
@@ -256,9 +254,14 @@ public class MapActivity extends AppCompatActivity implements LongTouchListener 
             canvas.removeRenderable(startPointRenderer);
         }
         this.startWaypoint = startWaypoint;
-        this.startWaypoint.setSelected(true);
-        startPointRenderer = new WaypointRenderer(startWaypoint);
-        canvas.addRenderable(startPointRenderer);
+        if(startWaypoint != null){
+            this.startWaypoint.setSelected(true);
+            startPointRenderer = new WaypointRenderer(startWaypoint);
+            canvas.addRenderable(startPointRenderer);
+            txtStartPoint.setText(startWaypoint.getName());
+        }else{
+            txtStartPoint.setText("");
+        }
         updateLayout();
     }
 
@@ -269,19 +272,24 @@ public class MapActivity extends AppCompatActivity implements LongTouchListener 
         }
 
         this.endWaypoint = endWaypoint;
-        this.endWaypoint.setSelected(true);
-        endPointRenderer = new WaypointRenderer(endWaypoint);
-        canvas.addRenderable(endPointRenderer);
+        if(endWaypoint != null){
+            this.endWaypoint.setSelected(true);
+            endPointRenderer = new WaypointRenderer(endWaypoint);
+            canvas.addRenderable(endPointRenderer);
+            txtTarget.setText(endWaypoint.getName());
+        }else{
+            txtTarget.setText("");
+        }
         updateLayout();
     }
 
     @Override
     public void onLongTouchDetected(Point2d point) {
         //TODO normalise point based on offset on canvas
-        if(startWaypoint == null){
-            startWaypoint = new DynamicWaypoint(point, mapWrapper.getMap());
-        }else if(endWaypoint == null){
-            endWaypoint = new DynamicWaypoint(point, mapWrapper.getMap());
+        if(endWaypoint == null){
+            setEndWaypoint(new DynamicWaypoint(point, mapWrapper.getMap()));
+        }else if(startWaypoint == null){
+            setStartWaypoint(new DynamicWaypoint(point, mapWrapper.getMap()));
         }
     }
 }

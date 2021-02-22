@@ -9,17 +9,42 @@ import com.jordan.ips.model.utils.rendering.RoomPolygonGenerator;
 import com.jordan.renderengine.data.Pair;
 import com.jordan.renderengine.data.Point2d;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class PathFindingUtils {
 
+    private static List<PathNode> dynamicPathNodes = new ArrayList<>();
+
     private PathFindingUtils() {
+
+    }
+
+    public static void unlinkDynamicPathNode(PathNode node){
+        if(!dynamicPathNodes.contains(node)){
+            throw new RuntimeException("Node is not dynamic");
+        }
+
+        for(PathNode n : node.childNodes){
+            n.removeChildNode(node);
+        }
+
+        node.childNodes.clear();
+        dynamicPathNodes.remove(node);
+    }
+
+    public static void clearAllDynamicPathNodes(){
+        for (int i = dynamicPathNodes.size() - 1; i >= 0; i--) {
+            PathNode node = dynamicPathNodes.get(i);
+            unlinkDynamicPathNode(node);
+        }
     }
 
     public static PathNode createDynamicPathNode(Map map, Point2d point, int floorIndex) {
         PathNode nNode = new PathNode(point);
 
+        //Find the room the point is part of
         Room pointRoom = map.getBuildings().stream()
                 .flatMap(building -> building.getFloors().stream())
                 .filter(floor -> floor.getFloorNumber() == floorIndex)
@@ -32,13 +57,12 @@ public class PathFindingUtils {
             return nNode;
         }
 
+        //filter all relevent path nodes within that room
         List<PathNode> releventNodes = map.getRootNode()
                 .flattenNodes()
                 .stream()
                 .filter(pathNode -> MapUtils.isPointInRoom(map, pointRoom, pathNode.getLocation()))
                 .collect(Collectors.toList());
-
-        Log.d("ttt", "Found nodes: " + releventNodes.size());
 
         for (PathNode node : releventNodes) {
             List<Pair<Point2d, Point2d>> walls = RoomPolygonGenerator.calculateWalls(pointRoom);
@@ -60,16 +84,11 @@ public class PathFindingUtils {
                 }
             }
             if (nodeOk) {
-                nNode.addChild(false, node);
+                nNode.addChild(true, node);
             }
         }
-//        if(room == null){
-//            return;
-//        }
-//        List<Pair<Point2d, Point2d>> walls = RoomPolygonGenerator.calculateWalls(room);
-//
-//        LineIntersection.get_line_intersection()
-//        nNode.addChild(false, pathNode);
+
+        dynamicPathNodes.add(nNode);
         return nNode;
     }
 }

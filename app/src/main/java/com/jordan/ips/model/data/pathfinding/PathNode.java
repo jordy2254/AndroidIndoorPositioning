@@ -105,4 +105,8 @@ public class PathNode implements Serializable {
     public void setLocation(Point2d location) {
         this.location = location;
     }
+
+    public void removeChildNode(PathNode node) {
+        this.childNodes.remove(node);
+    }
 }

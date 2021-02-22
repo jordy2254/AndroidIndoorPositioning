@@ -3,6 +3,7 @@ package com.jordan.ips.model.data;
 import android.content.Context;
 
 import com.google.gson.Gson;
+import com.jordan.ips.model.utils.PathFindingUtils;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -20,11 +21,10 @@ public class FileManager {
     private  static final String mapPath = "/maps";
 
     public static void saveWrapper(Context context, MapWrapper wrapper){
-
         if(!checkAndCreateSaveDir(context)){
             return;
         }
-
+        PathFindingUtils.clearAllDynamicPathNodes();
         File file = new File(getPathname(context), getFileName(wrapper));
         if(file.exists()) {
             file.delete();
@@ -49,7 +49,7 @@ public class FileManager {
     }
 
     public static void deleteWrapper(Context context, MapWrapper wrapper){
-
+        PathFindingUtils.clearAllDynamicPathNodes();
         if(!checkAndCreateSaveDir(context)){
             return;
         }
@@ -61,6 +61,7 @@ public class FileManager {
     }
 
     public static List<MapWrapper> loadMapWrappers(Context context) {
+        PathFindingUtils.clearAllDynamicPathNodes();
         File dir = new File(getPathname(context));
         if(!dir.exists()){
             return new ArrayList<>();

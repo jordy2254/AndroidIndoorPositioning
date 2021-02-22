@@ -18,6 +18,6 @@ public class WaypointRenderer implements Renderable {
     @Override
     public void render(Screen screen, Point2d offset, double scale) {
         Point2i renderLocation = RenderUtils.calculateRenderLocation(waypoint.getLocation(), offset, scale);
-        screen.renderRect(renderLocation.x, renderLocation.y, 10,10,0xaaaaaa);
+        screen.renderRect(renderLocation.x, renderLocation.y, 10,10,0x0000ff);
     }
 }

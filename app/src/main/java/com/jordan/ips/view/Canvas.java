@@ -107,15 +107,21 @@ public class Canvas extends RenderView implements LongTouchListener, View.OnTouc
     }
 
     public void addRenderable(Renderable renderable){
-        this.renderables.add(renderable);
+        synchronized (this.renderables){
+            this.renderables.add(renderable);
+        }
     }
 
     public void removeRenderable(Renderable renderable){
-        this.renderables.remove(renderable);
+        synchronized (this.renderables) {
+            this.renderables.remove(renderable);
+        }
     }
 
     public void clearRenderables(){
-        this.renderables.clear();
+        synchronized (this.renderables){
+            this.renderables.clear();
+        }
     }
 
 
@@ -125,19 +131,13 @@ public class Canvas extends RenderView implements LongTouchListener, View.OnTouc
 
         scaleGestureDetector.onTouchEvent(event);
 
-
         //Prevent moving of view when scaling
         if(scaling){
             longTouchDetector.invalidate();
             return true;
         }
 
-
         longTouchDetector.onTouch(v, event);
-
-        if(longTouchDetector.isValid()){
-            return true;
-        }
 
         if(event.getAction() == MotionEvent.ACTION_DOWN){
             initX = event.getX();
@@ -151,6 +151,9 @@ public class Canvas extends RenderView implements LongTouchListener, View.OnTouc
             return false;
         }
 
+        if(longTouchDetector.isValid()){
+            return true;
+        }
         xOff = initXOff + (event.getX() - initX);
         yOff = initYOff + (event.getY() - initY);
         return true;
