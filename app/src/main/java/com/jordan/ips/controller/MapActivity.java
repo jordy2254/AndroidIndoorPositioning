@@ -20,11 +20,13 @@ import com.jordan.ips.model.data.map.persisted.Floor;
 import com.jordan.ips.model.data.map.persisted.Room;
 import com.jordan.ips.model.data.pathfinding.PathNode;
 import com.jordan.ips.model.data.waypoints.CurrentLocationWayPoint;
+import com.jordan.ips.model.data.waypoints.DynamicWaypoint;
 import com.jordan.ips.model.data.waypoints.RoomWaypoint;
 import com.jordan.ips.model.data.waypoints.Waypoint;
 import com.jordan.ips.model.pathfinding.AStarPathFindingAlgorithm;
 import com.jordan.ips.model.utils.MapUtils;
 import com.jordan.ips.view.Canvas;
+import com.jordan.ips.view.LongTouchListener;
 import com.jordan.ips.view.recyclerAdapters.BasicRecyclerAdapter;
 import com.jordan.ips.view.renderable.MapRenderer;
 import com.jordan.ips.view.renderable.PathRenderer;
@@ -35,7 +37,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-public class MapActivity extends AppCompatActivity {
+public class MapActivity extends AppCompatActivity implements LongTouchListener {
 
     public static final String INTENT_MAP = "MAP";
     public static final int START_POINT_SEARCH = 1;
@@ -48,7 +50,7 @@ public class MapActivity extends AppCompatActivity {
 
     Button btnDirections;
 
-    MapWrapper map;
+    MapWrapper mapWrapper;
 
     Waypoint<?> startWaypoint = null;
     Waypoint<?> endWaypoint = null;
@@ -66,6 +68,7 @@ public class MapActivity extends AppCompatActivity {
     BasicRecyclerAdapter floorsAdapter;
     AStarPathFindingAlgorithm aStarPathFindingAlgorithm;
     PathRenderer pathRenderer;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -73,7 +76,7 @@ public class MapActivity extends AppCompatActivity {
         setSupportActionBar(null);
 
         Intent intent = getIntent();
-        map = (MapWrapper) intent.getSerializableExtra(INTENT_MAP);
+        mapWrapper = (MapWrapper) intent.getSerializableExtra(INTENT_MAP);
 
         lytDirectionPanel = findViewById(R.id.lytDirectionPanel);
         btnDirections = findViewById(R.id.btnDirections);
@@ -101,7 +104,7 @@ public class MapActivity extends AppCompatActivity {
         txtTarget.setOnFocusChangeListener((v, hasFocus) -> {
             if(hasFocus){
                 Intent i = new Intent(getApplicationContext(), LocationSearchActivity.class);
-                i.putExtra(INTENT_MAP, map);
+                i.putExtra(INTENT_MAP, mapWrapper);
 
                 startActivityForResult(i, END_POINT_SEARCH);
             }
@@ -111,7 +114,7 @@ public class MapActivity extends AppCompatActivity {
         txtStartPoint.setOnFocusChangeListener((v, hasFocus) -> {
             if(hasFocus){
                 Intent i = new Intent(getApplicationContext(), LocationSearchActivity.class);
-                i.putExtra(INTENT_MAP, map);
+                i.putExtra(INTENT_MAP, mapWrapper);
 
                 startActivityForResult(i, START_POINT_SEARCH);
             }
@@ -120,7 +123,7 @@ public class MapActivity extends AppCompatActivity {
         canvas = findViewById(R.id.mapCanvas);
 
         //Pull out unqique floor indexes
-        floorIndexes = map.getMap().getBuildings()
+        floorIndexes = mapWrapper.getMap().getBuildings()
                 .stream()
                 .flatMap(building -> building.getFloors().stream())
                 .map(Floor::getFloorNumber)
@@ -135,11 +138,10 @@ public class MapActivity extends AppCompatActivity {
         lstFloors.setLayoutManager(new LinearLayoutManager(this));
         lstFloors.setAdapter(floorsAdapter);
 
-        mapRenderer = new MapRenderer(map.getMap());
+        mapRenderer = new MapRenderer(mapWrapper.getMap());
         mapRenderer.setSelectedFloorIndex(floorIndexes.get(0));
 
         floorsAdapter.setBasicRecyclerAdapterListener((position) -> {
-            Log.d("abcd", "Setting floor position to index: " + position);
             mapRenderer.setSelectedFloorIndex(floorIndexes.get(position));
         });
         canvas.addRenderable(mapRenderer);
@@ -180,7 +182,7 @@ public class MapActivity extends AppCompatActivity {
                 //TODO clear selection
                 return;
             case LocationSearchActivity.RESPONSE_CURRENT_LOCATION:
-                waypoint = Optional.of(new CurrentLocationWayPoint(null, map.getMap()));
+                waypoint = Optional.of(new CurrentLocationWayPoint(null, mapWrapper.getMap()));
                 break;
             case LocationSearchActivity.RESPONSE_POINT_ON_MAP:
                 //TODO interact with the canvas to detect a long press!
@@ -222,18 +224,18 @@ public class MapActivity extends AppCompatActivity {
         Room selRoom = (Room) data.getSerializableExtra(LocationSearchActivity.EXTRA_ROOM_RESULT);
         long selectedId = selRoom.getId();
 
-        Optional<Room> room = map.findRoomById(selectedId);
+        Optional<Room> room = mapWrapper.findRoomById(selectedId);
         if(!room.isPresent()){
             Log.e("Search", "Room with id not found on map: " + selectedId);
             return Optional.empty();
         }
         Waypoint<Room> waypoint = new RoomWaypoint(room.get());
-        if(map.getMap().getRootNode() == null){
+        if(mapWrapper.getMap().getRootNode() == null){
             return Optional.empty();
         }
-        Optional<PathNode> node = map.getMap().getRootNode().flattenNodes()
+        Optional<PathNode> node = mapWrapper.getMap().getRootNode().flattenNodes()
                 .stream()
-                .filter(pathNode -> MapUtils.isPointInRoom(map.getMap(), room.get(), pathNode.getLocation())).min((o1, o2) -> {
+                .filter(pathNode -> MapUtils.isPointInRoom(mapWrapper.getMap(), room.get(), pathNode.getLocation())).min((o1, o2) -> {
                     Point2d roomCenter = room.get().getDimensions().divide(new Point2d(2, 2)).add(room.get().getLocation());
 
                     float euclidian1 = (float) Math.sqrt(((o1.getLocation().y - roomCenter.y) * (o1.getLocation().y - roomCenter.y)) + ((o1.getLocation().x - roomCenter.x * (o1.getLocation().x - roomCenter.x))));
@@ -271,5 +273,15 @@ public class MapActivity extends AppCompatActivity {
         endPointRenderer = new WaypointRenderer(endWaypoint);
         canvas.addRenderable(endPointRenderer);
         updateLayout();
+    }
+
+    @Override
+    public void onLongTouchDetected(Point2d point) {
+        //TODO normalise point based on offset on canvas
+        if(startWaypoint == null){
+            startWaypoint = new DynamicWaypoint(point, mapWrapper.getMap());
+        }else if(endWaypoint == null){
+            endWaypoint = new DynamicWaypoint(point, mapWrapper.getMap());
+        }
     }
 }

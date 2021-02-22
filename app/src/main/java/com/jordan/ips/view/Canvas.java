@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.View;
@@ -22,7 +23,7 @@ import com.jordan.renderengine.graphics.Updatable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Canvas extends RenderView implements View.OnTouchListener, ScaleGestureDetector.OnScaleGestureListener{
+public class Canvas extends RenderView implements LongTouchListener, View.OnTouchListener, ScaleGestureDetector.OnScaleGestureListener{
 
     final Screen screen = Screen.getInstance();
 
@@ -36,7 +37,10 @@ public class Canvas extends RenderView implements View.OnTouchListener, ScaleGes
     private double initXOff = 0;
     private double initYOff = 0;
     private boolean scaling = false;
-    ScaleGestureDetector mScaleDetector;
+
+    ScaleGestureDetector scaleGestureDetector;
+    LongTouchDetector longTouchDetector;
+    LongTouchListener longTouchListener;
 
     Bitmap renderOuput;
     final List<Renderable> renderables = new ArrayList<>();
@@ -97,7 +101,9 @@ public class Canvas extends RenderView implements View.OnTouchListener, ScaleGes
     public void init(Context context){
         setOnTouchListener(this);
         setFocusable(true);
-        mScaleDetector = new ScaleGestureDetector(context, this);
+        scaleGestureDetector = new ScaleGestureDetector(context, this);
+        longTouchDetector = new LongTouchDetector();
+        longTouchDetector.setLongTouchListener(this);
     }
 
     public void addRenderable(Renderable renderable){
@@ -117,10 +123,22 @@ public class Canvas extends RenderView implements View.OnTouchListener, ScaleGes
     public boolean onTouch(View v, MotionEvent event) {
         requestFocusFromTouch();
 
-        mScaleDetector.onTouchEvent(event);
+        scaleGestureDetector.onTouchEvent(event);
+
+
+        //Prevent moving of view when scaling
         if(scaling){
+            longTouchDetector.invalidate();
             return true;
         }
+
+
+        longTouchDetector.onTouch(v, event);
+
+        if(longTouchDetector.isValid()){
+            return true;
+        }
+
         if(event.getAction() == MotionEvent.ACTION_DOWN){
             initX = event.getX();
             initY = event.getY();
@@ -153,5 +171,16 @@ public class Canvas extends RenderView implements View.OnTouchListener, ScaleGes
     @Override
     public void onScaleEnd(ScaleGestureDetector detector) {
         scaling = false;
+    }
+
+    public void setLongTouchListener(LongTouchListener longTouchListener) {
+        this.longTouchListener = longTouchListener;
+    }
+
+    @Override
+    public void onLongTouchDetected(Point2d point) {
+        if(longTouchListener != null){
+            longTouchListener.onLongTouchDetected(point);
+        }
     }
 }

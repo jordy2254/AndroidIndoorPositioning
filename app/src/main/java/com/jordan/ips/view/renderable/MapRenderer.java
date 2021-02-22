@@ -59,7 +59,7 @@ public class MapRenderer implements Renderable {
                         });
                     });
         });
-        renderPathNodes(screen, offset, scale);
+//        renderPathNodes(screen, offset, scale);
     }
 
     public int getSelectedFloorIndex() {
