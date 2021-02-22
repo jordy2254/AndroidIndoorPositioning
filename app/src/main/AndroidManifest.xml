@@ -28,7 +28,7 @@
                 <action android:name="android.intent.action.VIEW"></action>
                 <category android:name="android.intent.category.DEFAULT"></category>
                 <category android:name="android.intent.category.BROWSABLE"></category>
-                <data android:host="com.jordan.ips" android:scheme="http" android:path="/sync"></data>
+                <data android:host="com.jordan.ips" android:scheme="app" android:path="/sync"></data>
             </intent-filter>
         </activity>
     </application>
