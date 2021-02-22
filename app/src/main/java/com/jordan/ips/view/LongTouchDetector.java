@@ -8,11 +8,14 @@ import com.jordan.renderengine.data.Point2d;
 
 public class LongTouchDetector implements View.OnTouchListener {
 
+    private static final int TIME = 1000;
+    private static final int TOLERANCE = 10;
 
     private boolean valid;
     private long startTime;
     private long endTime;
     Point2d location;
+
     LongTouchListener longTouchListener;
 
 
@@ -28,7 +31,11 @@ public class LongTouchDetector implements View.OnTouchListener {
             //record the end time
             endTime = event.getEventTime();
         }else if(event.getAction() == MotionEvent.ACTION_MOVE){
-            valid = false;
+            Point2d nLoc = new Point2d(event.getX(), event.getY());
+            Point2d calculated = nLoc.subtract(location);
+            if(Math.abs(calculated.x) > TOLERANCE || Math.abs(calculated.y) > TOLERANCE){
+                valid = false;
+            }
             return true;
         }
 
