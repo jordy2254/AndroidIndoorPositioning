@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -31,6 +32,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements MapSyncronisationDialogConfirmListener, MapRecyclerAdapterListener {
+
+    private static final String MAP_ID = "mapid";
+    private static final String MAP_PASS = "pass";
+
 
     MapRecyclerAdapter mapRecyclerAdapter;
     MapSyncronisationDialog input;
@@ -65,6 +70,14 @@ public class MainActivity extends AppCompatActivity implements MapSyncronisation
         for(MapWrapper wrapper : wrappers){
             mapRecyclerAdapter.add(wrapper);
         }
+        Intent intent = getIntent();
+        if (Intent.ACTION_VIEW.equals(intent.getAction())) {
+            Uri uri = intent.getData();
+            String temp_map_id = uri.getQueryParameter(MAP_ID);
+            String temp_map_pass = uri.getQueryParameter(MAP_PASS);
+            syncroniseMap(temp_map_id, temp_map_pass);
+        }
+
         checkMapState();
 //        Intent intent = new Intent(this, BeaconScanningActivity.class);
 //        startActivity(intent);
@@ -100,6 +113,11 @@ public class MainActivity extends AppCompatActivity implements MapSyncronisation
 
     @Override
     public void onMapInputDialogSuccessListener(String mapId, String mapPass) {
+
+        syncroniseMap(mapId, mapPass);
+    }
+
+    private void syncroniseMap(String mapId, String mapPass){
         if(mapId == null || mapId.isEmpty()){
             Toast.makeText(getApplicationContext(), "Map Id must be filled in", Toast.LENGTH_SHORT).show();
             return;
@@ -112,6 +130,7 @@ public class MainActivity extends AppCompatActivity implements MapSyncronisation
             return;
         }
 
+
         MapWrapper mapWrapper = new MapWrapper();
         mapWrapper.setSyncing(true);
 
@@ -119,7 +138,7 @@ public class MainActivity extends AppCompatActivity implements MapSyncronisation
         MapSyncronisationUtil.syncroniseMapAndUpdateWrapper(mapWrapper,mapIdParsed, mapPass, this.getApplicationContext(), new MapSyncronsiedCallBack() {
             @Override
             public void syncronisationComplete(Map map) {
-               mapRecyclerAdapter.notifyDataSetChanged();
+                mapRecyclerAdapter.notifyDataSetChanged();
             }
 
             @Override
@@ -132,7 +151,6 @@ public class MainActivity extends AppCompatActivity implements MapSyncronisation
         mapRecyclerAdapter.add(mapWrapper);
         checkMapState();
     }
-
     @Override
     public void mapRecyclerOnItemClick(View view, int position, MapWrapper map) {
         Log.i("MAIN ACTIVITY LIST PRES", "Position: " + position);

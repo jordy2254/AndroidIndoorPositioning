@@ -249,6 +249,10 @@ public class MapActivity extends AppCompatActivity implements LongTouchListener 
     }
 
     public void setStartWaypoint(Waypoint<?> startWaypoint) {
+        if(pathRenderer != null){
+            canvas.removeRenderable(pathRenderer);
+            pathRenderer = null;
+        }
         if(this.startWaypoint != null){
             this.startWaypoint.setSelected(false);
             canvas.removeRenderable(startPointRenderer);
@@ -266,6 +270,10 @@ public class MapActivity extends AppCompatActivity implements LongTouchListener 
     }
 
     public void setEndWaypoint(Waypoint<?> endWaypoint) {
+        if(pathRenderer != null){
+            canvas.removeRenderable(pathRenderer);
+            pathRenderer = null;
+        }
         if(this.endWaypoint != null){
             this.endWaypoint.setSelected(false);
             canvas.removeRenderable(endPointRenderer);
