@@ -75,7 +75,10 @@ public abstract class RenderView extends SurfaceView implements Runnable, Surfac
                 screen.clear();
 
                 render();
-
+                if(renderOutput.getHeight() != height){
+                    getHolder().unlockCanvasAndPost(canvas);
+                    continue;
+                }
                 renderOutput.setPixels(screen.getPixels(), 0, width, 0,0,width,height);
                 canvas.drawBitmap(renderOutput, 0,0, null);
                 drawFrame(canvas);
