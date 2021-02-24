@@ -47,7 +47,7 @@ public class MapSyncronisationUtil {
         };
 
 
-        MyRequestQueue.getInstance(context).addToRequestQueue(sr);
+        VolleyRequestQueue.getInstance(context).addToRequestQueue(sr);
     }
 
     public static void syncroniseMapAndUpdateWrapper(MapWrapper mapWrapper, int mapId, String mapPass, Context context, MapSyncronsiedCallBack callBack){

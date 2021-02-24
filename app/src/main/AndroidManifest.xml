@@ -16,7 +16,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar"
         android:fullBackupContent="@xml/backup_descriptor">
-        <activity android:name=".controller.LocationSearchActivity"></activity>
+        <activity android:name=".controller.LocationSearchActivity" />
         <activity android:name=".controller.MapActivity" />
         <activity android:name=".controller.MainActivity">
             <intent-filter>
@@ -25,10 +25,15 @@
             </intent-filter>
 
             <intent-filter>
-                <action android:name="android.intent.action.VIEW"></action>
-                <category android:name="android.intent.category.DEFAULT"></category>
-                <category android:name="android.intent.category.BROWSABLE"></category>
-                <data android:host="com.jordan.ips" android:scheme="app" android:path="/sync"></data>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="com.jordan.ips"
+                    android:scheme="app"
+                    android:path="/sync" />
             </intent-filter>
         </activity>
     </application>

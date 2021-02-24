@@ -142,9 +142,7 @@ public class MapActivity extends AppCompatActivity implements LongTouchListener 
         mapRenderer = new MapRenderer(mapWrapper.getMap());
         mapRenderer.setSelectedFloorIndex(floorIndexes.get(0));
 
-        floorsAdapter.setBasicRecyclerAdapterListener((position) -> {
-            mapRenderer.setSelectedFloorIndex(floorIndexes.get(position));
-        });
+        floorsAdapter.setBasicRecyclerAdapterListener((position) -> mapRenderer.setSelectedFloorIndex(floorIndexes.get(position)));
         canvas.addRenderable(mapRenderer);
         canvas.setLongTouchListener(this);
 

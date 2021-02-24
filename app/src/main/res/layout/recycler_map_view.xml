@@ -26,7 +26,7 @@
       app:layout_constraintStart_toStartOf="parent"
       app:layout_constraintTop_toTopOf="parent"
       app:srcCompat="@drawable/map"
-      />
+      android:contentDescription="TODO" />
 
   <ProgressBar
       android:id="@+id/pbSyncing"
@@ -86,7 +86,8 @@
           android:layout_weight="1"
           android:padding="10dp"
           android:scaleType="fitCenter"
-          android:src="@drawable/ic_trash_solid" />
+          android:src="@drawable/ic_trash_solid"
+          android:contentDescription="TODO" />
 
       <ImageButton
           android:id="@+id/btnSyncMap"
@@ -95,7 +96,8 @@
           android:layout_weight="1"
           android:padding="10dp"
           android:scaleType="fitCenter"
-          android:src="@drawable/ic_sync_solid" />
+          android:src="@drawable/ic_sync_solid"
+          android:contentDescription="TODO" />
     </LinearLayout>
 
     <TextView
@@ -105,14 +107,14 @@
         android:gravity="left"
         android:paddingLeft="5dp"
         android:text="last syncronised:"
-        android:textSize="12dp" />
+        android:textSize="12sp" />
 
     <TextView
         android:id="@+id/lblLastSyncedDate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="YYYY-MM-DD@hh:mm"
-        android:textSize="10dp" />
+        android:textSize="10sp" />
 
   </LinearLayout>
 

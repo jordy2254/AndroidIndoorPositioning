@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 
 public class PathFindingUtils {
 
-    private static List<PathNode> dynamicPathNodes = new ArrayList<>();
+    private static final List<PathNode> dynamicPathNodes = new ArrayList<>();
 
     private PathFindingUtils() {
 

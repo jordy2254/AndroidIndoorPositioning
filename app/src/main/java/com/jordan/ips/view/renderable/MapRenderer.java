@@ -28,37 +28,33 @@ public class MapRenderer implements Renderable {
 
     @Override
     public void render(Screen screen, Point2d offset, double scale) {
-        selectedMap.getBuildings().forEach(building -> {
-            building.getFloors()
-                    .stream()
-                    .filter(floor -> floor.getFloorNumber() == selectedFloorIndex)
-                    .forEach(floor -> {
-                        floor.getRooms().forEach(room -> {
+        selectedMap.getBuildings().forEach(building -> building.getFloors()
+                .stream()
+                .filter(floor -> floor.getFloorNumber() == selectedFloorIndex)
+                .forEach(floor -> floor.getRooms().forEach(room -> {
 
-                            if(!roomPolygonCache.containsKey(room.getId())){
-                                roomPolygonCache.put(room.getId(), RoomPolygonGenerator.createPolygon(room));
-                            }
-                            Point2d translation = floor.getLocation()
-                                    .add(building.getLocation())
-                                    .add(room.getLocation())
-                                    .multiply(new Point2d(scale, scale))
-                                    .add(offset);
+                        if(!roomPolygonCache.containsKey(room.getId())){
+                            roomPolygonCache.put(room.getId(), RoomPolygonGenerator.createPolygon(room));
+                        }
+                        Point2d translation = floor.getLocation()
+                                .add(building.getLocation())
+                                .add(room.getLocation())
+                                .multiply(new Point2d(scale, scale))
+                                .add(offset);
 
 
 //                            List<Point2d> renderPoints = RoomPolygonGenerator.translate(roomPolygonCache.get(room.getId()), translation);
 //                            renderPoints = RoomPolygonGenerator.scale(renderPoints, scale);
-                            List<Point2d> renderPoints = RoomPolygonGenerator.scale(roomPolygonCache.get(room.getId()), scale);
-                            renderPoints = RoomPolygonGenerator.translate(renderPoints, translation);
-                            int color = 0xf0ae5d;
+                        List<Point2d> renderPoints = RoomPolygonGenerator.scale(roomPolygonCache.get(room.getId()), scale);
+                        renderPoints = RoomPolygonGenerator.translate(renderPoints, translation);
+                        int color = 0xf0ae5d;
 //                            if(room.isSelected()){
 //                                color = 0xff00ff;
 //                            }
-                            screen.drawPolygonUpdated(renderPoints, 2, 0x0, color, true);
-                            screen.drawPolygon(renderPoints, 2, 0x0, true);
+                        screen.drawPolygonUpdated(renderPoints, 2, 0x0, color, true);
+                        screen.drawPolygon(renderPoints, 2, 0x0, true);
 
-                        });
-                    });
-        });
+                    })));
 //        renderPathNodes(screen, offset, scale);
     }
 
