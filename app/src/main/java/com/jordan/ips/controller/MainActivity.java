@@ -139,6 +139,7 @@ public class MainActivity extends AppCompatActivity implements MapSyncronisation
             @Override
             public void syncronisationComplete(Map map) {
                 mapRecyclerAdapter.notifyDataSetChanged();
+                Toast.makeText(getApplicationContext(), "Map Syncronisation complete", Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -149,6 +150,7 @@ public class MainActivity extends AppCompatActivity implements MapSyncronisation
         });
 
         mapRecyclerAdapter.add(mapWrapper);
+        mapRecyclerAdapter.notifyDataSetChanged();
         checkMapState();
     }
     @Override

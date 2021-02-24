@@ -13,9 +13,9 @@ public class RenderUtils {
         return new Point2i(x);
     }
 
-    public static Point2i calculateMapLocationFromScreen(Point2d touchLocation, Point2d offsets, double scale){
+    public static Point2d calculateMapLocationFromScreen(Point2d touchLocation, Point2d offsets, double scale){
         Point2d x = touchLocation.subtract(offsets);
         x = x.divide(new Point2d(scale, scale));
-        return new Point2i(x);
+        return x;
     }
 }

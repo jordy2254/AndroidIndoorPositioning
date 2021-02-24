@@ -18,6 +18,11 @@ public class Point2d implements Serializable {
         this.y =point.y;
     }
 
+    public Point2d(Point2i point) {
+        this.x = point.x;
+        this.y =point.y;
+    }
+
     public Point2i getIntValue(){
         return new Point2i(((int) x), ((int) y));
     }
@@ -29,8 +34,8 @@ public class Point2d implements Serializable {
     }
 
     public Point2d subtract(Point2d point){
-        double nx = point.x - this.x;
-        double ny = point.y - this.y;
+        double nx = this.x - point.x;
+        double ny = this.y - point.y;
         return new Point2d(nx, ny);
     }
 
@@ -38,8 +43,8 @@ public class Point2d implements Serializable {
         if (point.x == 0 || point.y == 0 || this.x == 0 || this.y == 0){
             throw new ArithmeticException("Cannot divide by 0");
         }
-        double nx = point.x / this.x;
-        double ny = point.y / this.y;
+        double nx = this.x / point.x;
+        double ny = this.y / point.y;
         return new Point2d(nx, ny);
     }
 

@@ -32,6 +32,7 @@ import com.jordan.ips.view.renderable.MapRenderer;
 import com.jordan.ips.view.renderable.PathRenderer;
 import com.jordan.ips.view.renderable.WaypointRenderer;
 import com.jordan.renderengine.data.Point2d;
+import com.jordan.renderengine.utils.RenderUtils;
 
 import java.util.List;
 import java.util.Optional;
@@ -294,6 +295,7 @@ public class MapActivity extends AppCompatActivity implements LongTouchListener 
     @Override
     public void onLongTouchDetected(Point2d point) {
         //TODO normalise point based on offset on canvas
+        point = RenderUtils.calculateMapLocationFromScreen(point, canvas.getOffsets(), canvas.getScale());
         if(endWaypoint == null){
             setEndWaypoint(new DynamicWaypoint(point, mapWrapper.getMap()));
         }else if(startWaypoint == null){

@@ -25,10 +25,10 @@ public class PathRenderer implements Renderable {
 
             int color = 0x0000ff;
             if(i == 0){
-                color = 0x00ff00;
+                color = 0xff0000;
             }
             if(i == nodes.size() - 1){
-                color = 0xff0000;
+                color = 0x00ff00;
             }
             if (prevDraw != null) {
                 screen.drawLine(((int) drawLocation.x), ((int) drawLocation.y), ((int) prevDraw.x), ((int) prevDraw.y), 3, 0x0000ff);

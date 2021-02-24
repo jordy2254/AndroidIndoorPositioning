@@ -186,4 +186,12 @@ public class Canvas extends RenderView implements LongTouchListener, View.OnTouc
             longTouchListener.onLongTouchDetected(point);
         }
     }
+
+    public Point2d getOffsets(){
+        return new Point2d(xOff, yOff);
+    }
+
+    public double getScale() {
+        return scale;
+    }
 }
