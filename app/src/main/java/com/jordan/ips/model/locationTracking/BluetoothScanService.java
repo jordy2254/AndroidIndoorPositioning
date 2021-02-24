@@ -17,6 +17,7 @@ import java.util.Map;
 public class BluetoothScanService extends ScanCallback {
 
     private static BluetoothScanService INSTANCE = null;
+
     private static final int RSSI_INDEX = 0;
     private static final int MESURED_POWER_INDEX = 1;
 
@@ -25,6 +26,7 @@ public class BluetoothScanService extends ScanCallback {
     static final BluetoothAdapter mAdapter = BluetoothAdapter.getDefaultAdapter();
     private final Map<String, Integer[]> sensorData = new HashMap<>();
 
+    private boolean running = false;
 
     private BluetoothScanService() {
 
@@ -41,10 +43,16 @@ public class BluetoothScanService extends ScanCallback {
                 .setScanMode(ScanSettings.SCAN_MODE_LOW_LATENCY)
                 .build();
         mAdapter.getBluetoothLeScanner().startScan(filters, settings, this);
+        running = true;
     }
 
     public void stopScan(){
         mAdapter.getBluetoothLeScanner().stopScan(this);
+        running = false;
+    }
+
+    public boolean isRunning() {
+        return running;
     }
 
     @Override

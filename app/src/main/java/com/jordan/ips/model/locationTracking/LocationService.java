@@ -7,6 +7,9 @@ public class LocationService {
 
     private static LocationService INSTANCE = null;
 
+    private BluetoothScanService bluetoothScanService = BluetoothScanService.getInstance();
+
+
     public double getDistanceFromSensor(String sensorId){
         return 0D;
     }
