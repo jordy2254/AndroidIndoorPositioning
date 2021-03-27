@@ -15,7 +15,7 @@ public class AStarPathFindingAlgorithm {
     private List<AStarNode> closeList;
 
     private PathNode startNode;
-    private final PathNode endNode;
+    private PathNode endNode;
     private AStarNode currentNode = null;
 
     public AStarPathFindingAlgorithm(PathNode startNode, PathNode endNode) {
@@ -144,5 +144,13 @@ public class AStarPathFindingAlgorithm {
             }
         }
         return false;
+    }
+
+    public void setEndNode(PathNode pathNode) {
+        if(pathNode.equals(endNode)){
+            return;
+        }
+        this.endNode = pathNode;
+        this.reset();
     }
 }

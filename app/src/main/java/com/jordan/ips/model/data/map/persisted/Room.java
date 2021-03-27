@@ -3,6 +3,7 @@ package com.jordan.ips.model.data.map.persisted;
 import java.io.Serializable;
 import java.util.List;
 
+import com.jordan.renderengine.data.Pair;
 import com.jordan.renderengine.data.Point2d;
 
 
@@ -15,6 +16,9 @@ public class Room implements Serializable {
 
     Point2d location;
     Point2d dimensions;
+
+    private List<Pair<Point2d, Point2d>> walls;
+    private List<Point2d> polygon;
 
     private List<RoomIndent> indents;
 
@@ -86,5 +90,22 @@ public class Room implements Serializable {
 
     public void setSelected(boolean selected) {
         this.selected = selected;
+    }
+
+
+    public List<Pair<Point2d, Point2d>> getWalls() {
+        return walls;
+    }
+
+    public void setWalls(List<Pair<Point2d, Point2d>> walls) {
+        this.walls = walls;
+    }
+
+    public List<Point2d> getPolygon() {
+        return polygon;
+    }
+
+    public void setPolygon(List<Point2d> polygon) {
+        this.polygon = polygon;
     }
 }

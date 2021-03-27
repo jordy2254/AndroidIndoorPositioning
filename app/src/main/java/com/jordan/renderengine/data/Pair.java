@@ -1,8 +1,13 @@
 package com.jordan.renderengine.data;
 
-public class Pair <T, R> {
+import java.io.Serializable;
+
+public class Pair <T, R> implements Serializable {
     public T fst;
     public R snd;
+
+    public Pair() {
+    }
 
     public Pair(T fst, R snd){
         this.fst = fst;
@@ -14,4 +19,11 @@ public class Pair <T, R> {
         return fst.toString() + " -> " + snd.toString();
     }
 
+    public void setFst(T fst) {
+        this.fst = fst;
+    }
+
+    public void setSnd(R snd) {
+        this.snd = snd;
+    }
 }

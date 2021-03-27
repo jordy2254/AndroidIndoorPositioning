@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.style.UpdateAppearance;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -32,13 +33,14 @@ import com.jordan.ips.view.renderable.MapRenderer;
 import com.jordan.ips.view.renderable.PathRenderer;
 import com.jordan.ips.view.renderable.WaypointRenderer;
 import com.jordan.renderengine.data.Point2d;
+import com.jordan.renderengine.graphics.Updatable;
 import com.jordan.renderengine.utils.RenderUtils;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-public class MapActivity extends AppCompatActivity implements LongTouchListener {
+public class MapActivity extends AppCompatActivity implements LongTouchListener, Updatable {
 
     public static final String INTENT_MAP = "MAP";
     public static final int START_POINT_SEARCH = 1;
@@ -69,6 +71,8 @@ public class MapActivity extends AppCompatActivity implements LongTouchListener 
     BasicRecyclerAdapter floorsAdapter;
     AStarPathFindingAlgorithm aStarPathFindingAlgorithm;
     PathRenderer pathRenderer;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -145,8 +149,9 @@ public class MapActivity extends AppCompatActivity implements LongTouchListener 
         floorsAdapter.setBasicRecyclerAdapterListener((position) -> mapRenderer.setSelectedFloorIndex(floorIndexes.get(position)));
         canvas.addRenderable(mapRenderer);
         canvas.setLongTouchListener(this);
-
+        canvas.addUpdateable(this);
         updateLayout();
+
 
 //        new Thread(() -> BluetoothScanner.test(), "Sensor Thread").start();
     }
@@ -298,6 +303,17 @@ public class MapActivity extends AppCompatActivity implements LongTouchListener 
             setEndWaypoint(new DynamicWaypoint(point, mapWrapper.getMap()));
         }else if(startWaypoint == null){
             setStartWaypoint(new DynamicWaypoint(point, mapWrapper.getMap()));
+        }
+    }
+
+    @Override
+    public void update() {
+        if(pathRenderer != null && aStarPathFindingAlgorithm != null){
+            aStarPathFindingAlgorithm.setStartNode(startWaypoint.getPathNode());
+            aStarPathFindingAlgorithm.setEndNode(endWaypoint.getPathNode());
+            aStarPathFindingAlgorithm = new AStarPathFindingAlgorithm(startWaypoint.getPathNode(), endWaypoint.getPathNode());
+            List<PathNode> nodes = aStarPathFindingAlgorithm.compute();
+            pathRenderer.setNodes(nodes);
         }
     }
 }

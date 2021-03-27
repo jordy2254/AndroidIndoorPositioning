@@ -20,8 +20,6 @@ public class MapRenderer implements Renderable {
     private int selectedFloorIndex = 0;
     private final Map selectedMap;
 
-    final java.util.Map<Long, List<Point2d>> roomPolygonCache = new HashMap<>();
-
     public MapRenderer(Map selectedMap) {
         this.selectedMap = selectedMap;
     }
@@ -33,9 +31,7 @@ public class MapRenderer implements Renderable {
                 .filter(floor -> floor.getFloorNumber() == selectedFloorIndex)
                 .forEach(floor -> floor.getRooms().forEach(room -> {
 
-                        if(!roomPolygonCache.containsKey(room.getId())){
-                            roomPolygonCache.put(room.getId(), RoomPolygonGenerator.createPolygon(room));
-                        }
+
                         Point2d translation = floor.getLocation()
                                 .add(building.getLocation())
                                 .add(room.getLocation())
@@ -45,7 +41,7 @@ public class MapRenderer implements Renderable {
 
 //                            List<Point2d> renderPoints = RoomPolygonGenerator.translate(roomPolygonCache.get(room.getId()), translation);
 //                            renderPoints = RoomPolygonGenerator.scale(renderPoints, scale);
-                        List<Point2d> renderPoints = RoomPolygonGenerator.scale(roomPolygonCache.get(room.getId()), scale);
+                        List<Point2d> renderPoints = RoomPolygonGenerator.scale(room.getPolygon(), scale);
                         renderPoints = RoomPolygonGenerator.translate(renderPoints, translation);
                         int color = 0xf0ae5d;
 //                            if(room.isSelected()){
@@ -66,7 +62,6 @@ public class MapRenderer implements Renderable {
         if(selectedFloorIndex == this.selectedFloorIndex){
             return;
         }
-        roomPolygonCache.clear();
         this.selectedFloorIndex = selectedFloorIndex;
     }
 

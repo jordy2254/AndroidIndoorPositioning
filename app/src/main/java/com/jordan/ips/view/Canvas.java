@@ -13,6 +13,7 @@ import android.view.View;
 
 import androidx.annotation.Nullable;
 
+import com.jordan.ips.controller.MapActivity;
 import com.jordan.renderengine.data.Point2d;
 import com.jordan.renderengine.android.RenderView;
 import com.jordan.renderengine.Screen;
@@ -193,5 +194,9 @@ public class Canvas extends RenderView implements LongTouchListener, View.OnTouc
 
     public double getScale() {
         return scale;
+    }
+
+    public void addUpdateable(Updatable updatable) {
+        updatables.add(updatable);
     }
 }

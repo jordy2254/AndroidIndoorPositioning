@@ -16,6 +16,7 @@ public class Map implements Serializable {
     private String identifier;
     private String password;
     private String name;
+    private double northAngle;
 
     private List<Building> buildings;
 
@@ -161,5 +162,13 @@ public class Map implements Serializable {
 
     public List<MapEdge> getEdges() {
         return edges;
+    }
+
+    public double getNorthAngle() {
+        return northAngle;
+    }
+
+    public void setNorthAngle(double northAngle) {
+        this.northAngle = northAngle;
     }
 }

@@ -10,16 +10,19 @@ public class CurrentLocationWayPoint extends Waypoint<LocationService>{
 
     private boolean selected = false;
     private final Map map;
+    private PathNode pathNode;
+
+    Point2d cLoc = new Point2d(170,290);
 
     public CurrentLocationWayPoint(LocationService point, Map map) {
         super(point);
-        this.pathNode = new PathNode(getLocation());
         this.map = map;
     }
 
     @Override
     public Point2d getLocation() {
-        return new Point2d(170,290);
+        cLoc = cLoc.add(new Point2d(1,0));
+        return cLoc;
     }
 
     @Override
@@ -39,8 +42,14 @@ public class CurrentLocationWayPoint extends Waypoint<LocationService>{
 
     @Override
     public PathNode getPathNode() {
-        //TODO dehardcode the floor
-        return PathFindingUtils.createDynamicPathNode(map, getLocation(), 1);
+        if(pathNode == null){
+            pathNode = PathFindingUtils.createDynamicPathNode(map, getLocation(), 1);
+        }else{
+            PathFindingUtils.unlinkDynamicPathNode(pathNode, false);
+            pathNode.setLocation(getLocation());
+            PathFindingUtils.linkDynamicPathNode(map, pathNode, 1);
+        }
+        return pathNode;
     }
 
     @Override

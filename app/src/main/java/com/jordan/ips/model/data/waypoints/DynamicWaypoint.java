@@ -1,6 +1,5 @@
 package com.jordan.ips.model.data.waypoints;
 
-import com.jordan.ips.model.LocationService;
 import com.jordan.ips.model.data.map.persisted.Map;
 import com.jordan.ips.model.data.pathfinding.PathNode;
 import com.jordan.ips.model.utils.PathFindingUtils;
@@ -32,7 +31,7 @@ public class DynamicWaypoint extends Waypoint<Point2d>{
     public void setSelected(boolean selected) {
         this.selected = selected;
         if(!this.selected && pathNode != null){
-            PathFindingUtils.unlinkDynamicPathNode(pathNode);
+            PathFindingUtils.unlinkDynamicPathNode(pathNode, true);
         }
     }
 
@@ -40,7 +39,7 @@ public class DynamicWaypoint extends Waypoint<Point2d>{
     public void toggleSelected() {
         this.selected = !selected;
         if(!this.selected && pathNode != null){
-            PathFindingUtils.unlinkDynamicPathNode(pathNode);
+            PathFindingUtils.unlinkDynamicPathNode(pathNode, true);
         }
     }
 
