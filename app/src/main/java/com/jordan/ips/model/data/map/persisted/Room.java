@@ -1,6 +1,7 @@
 package com.jordan.ips.model.data.map.persisted;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.jordan.renderengine.data.Pair;
@@ -95,6 +96,14 @@ public class Room implements Serializable {
 
     public List<Pair<Point2d, Point2d>> getWalls() {
         return walls;
+    }
+
+    public List<Pair<Point2d, Point2d>> getWallsCopy() {
+        List<Pair<Point2d, Point2d>> retVal = new ArrayList<>();
+        walls.forEach(p ->{
+            retVal.add(new Pair(new Point2d(p.fst), new Point2d(p.snd)));
+        });
+        return retVal;
     }
 
     public void setWalls(List<Pair<Point2d, Point2d>> walls) {

@@ -83,7 +83,7 @@ public class PathFindingUtils {
 
 
             boolean nodeOk = true;
-            for (Pair<Point2d, Point2d> wall : pointRoom.getWalls()) {
+            for (Pair<Point2d, Point2d> wall : pointRoom.getWallsCopy()) {
                 wall.fst = wall.fst.add(pointRoom.getLocation());
                 wall.snd = wall.snd.add(pointRoom.getLocation());
 

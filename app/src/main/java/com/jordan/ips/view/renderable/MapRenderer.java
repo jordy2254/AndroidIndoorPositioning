@@ -4,6 +4,7 @@ import com.jordan.ips.model.data.map.persisted.Map;
 import com.jordan.ips.model.data.pathfinding.PathNode;
 import com.jordan.ips.model.utils.rendering.RoomPolygonGenerator;
 import com.jordan.renderengine.Screen;
+import com.jordan.renderengine.data.Pair;
 import com.jordan.renderengine.data.Point2d;
 import com.jordan.renderengine.data.Point2i;
 import com.jordan.renderengine.graphics.Renderable;
@@ -31,6 +32,9 @@ public class MapRenderer implements Renderable {
                 .filter(floor -> floor.getFloorNumber() == selectedFloorIndex)
                 .forEach(floor -> floor.getRooms().forEach(room -> {
 
+                        if(room.getId() != 1){
+//                            return;
+                        }
 
                         Point2d translation = floor.getLocation()
                                 .add(building.getLocation())
@@ -48,10 +52,16 @@ public class MapRenderer implements Renderable {
 //                                color = 0xff00ff;
 //                            }
                         screen.drawPolygonUpdated(renderPoints, 2, 0x0, color, true);
-                        screen.drawPolygon(renderPoints, 2, 0x0, true);
+
+                        for (Pair<Point2d, Point2d> x :room.getWalls()) {
+                            Point2d scaled1 = x.fst.multiply(new Point2d(scale, scale)).add(translation);
+                            Point2d scaled2 = x.snd.multiply(new Point2d(scale, scale)).add(translation);
+
+                            screen.drawLine((int)scaled1.x, (int)scaled1.y, (int)scaled2.x, (int)scaled2.y, 2, 0x000000);
+                        }
 
                     })));
-//        renderPathNodes(screen, offset, scale);
+        renderPathNodes(screen, offset, scale);
     }
 
     public int getSelectedFloorIndex() {
