@@ -46,6 +46,8 @@ public class MapActivity extends AppCompatActivity implements LongTouchListener,
     public static final int START_POINT_SEARCH = 1;
     public static final int END_POINT_SEARCH = 2;
 
+    LocationService locationService = LocationService.getINSTANCE();
+
     Canvas canvas;
 
     EditText txtTarget;
@@ -150,8 +152,9 @@ public class MapActivity extends AppCompatActivity implements LongTouchListener,
         canvas.addRenderable(mapRenderer);
         canvas.setLongTouchListener(this);
         canvas.addUpdateable(this);
-        updateLayout();
 
+        updateLayout();
+        locationService.start();
 
 //        new Thread(() -> BluetoothScanner.test(), "Sensor Thread").start();
     }
@@ -315,5 +318,24 @@ public class MapActivity extends AppCompatActivity implements LongTouchListener,
             List<PathNode> nodes = aStarPathFindingAlgorithm.compute();
             pathRenderer.setNodes(nodes);
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.i("Map", "Activity Destroyed");
+        locationService.stop();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        locationService.stop();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        locationService.start();
     }
 }

@@ -29,6 +29,18 @@ public class LocationService {
         return new Point2d(10,10);
     }
 
+    public void start(){
+        for (ScanAndDistanceService s: scanners) {
+            s.start();
+        }
+    }
+
+    public void stop(){
+        for (ScanAndDistanceService s: scanners) {
+            s.stop();
+        }
+    }
+
     public synchronized static LocationService getINSTANCE() {
         if (INSTANCE == null) {
             INSTANCE = new LocationService();

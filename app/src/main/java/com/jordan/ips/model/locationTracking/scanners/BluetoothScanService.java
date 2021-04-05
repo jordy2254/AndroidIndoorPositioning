@@ -34,6 +34,9 @@ public class BluetoothScanService extends ScanCallback implements ScanAndDistanc
 
     @Override
     public void start() {
+        if(running){
+            return;
+        }
         List<ScanFilter> filters = new ArrayList<>();
         filters.add(
                 new ScanFilter.Builder()
@@ -49,6 +52,9 @@ public class BluetoothScanService extends ScanCallback implements ScanAndDistanc
 
     @Override
     public void stop() {
+        if(!running){
+            return;
+        }
         mAdapter.getBluetoothLeScanner().stopScan(this);
         running = false;
     }
