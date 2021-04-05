@@ -59,45 +59,45 @@ public class PathFindingUtils {
 
     public static void linkDynamicPathNode(Map map, PathNode node, int floorIndex){
 
-        //Find the room the point is part of
-        Room pointRoom = map.getBuildings().stream()
+        List<Room> rooms = map.getBuildings().stream()
                 .flatMap(building -> building.getFloors().stream())
                 .filter(floor -> floor.getFloorNumber() == floorIndex)
                 .flatMap(floor -> floor.getRooms().stream())
-                .filter(room1 -> MapUtils.isPointInRoom(map, room1, node.getLocation()))
-                .findFirst()
-                .orElse(null);
+                .collect(Collectors.toList());
 
-        if (pointRoom == null) {
-            return;
-        }
+        //Find the room the point is part of
 
         //filter all relevent path nodes within that room
         List<PathNode> releventNodes = map.getRootNode()
                 .flattenNodes()
                 .stream()
-                .filter(pathNode -> MapUtils.isPointInRoom(map, pointRoom, pathNode.getLocation()))
                 .collect(Collectors.toList());
 
         for (PathNode n : releventNodes) {
 
 
             boolean nodeOk = true;
-            for (Pair<Point2d, Point2d> wall : pointRoom.getWallsCopy()) {
-                wall.fst = wall.fst.add(pointRoom.getLocation());
-                wall.snd = wall.snd.add(pointRoom.getLocation());
+            for(Room pointRoom : rooms){
+                for (Pair<Point2d, Point2d> wall : pointRoom.getWallsCopy()) {
+                    wall.fst = wall.fst.add(pointRoom.getLocation());
+                    wall.snd = wall.snd.add(pointRoom.getLocation());
 
-                if (LineIntersection.get_line_intersection(node.location.x, node.location.y,
-                        n.location.x, n.location.y,
-                        wall.fst.x, wall.fst.y,
-                        wall.snd.x, wall.snd.y)) {
-                    nodeOk = false;
+                    if (LineIntersection.get_line_intersection(node.location.x, node.location.y,
+                            n.location.x, n.location.y,
+                            wall.fst.x, wall.fst.y,
+                            wall.snd.x, wall.snd.y)) {
+                        nodeOk = false;
+                    }
+
+                    if (!nodeOk) {
+                        break;
+                    }
                 }
-
-                if (!nodeOk) {
+                if(!nodeOk){
                     break;
                 }
             }
+
             if (nodeOk) {
                 node.addChild(true, n);
             }

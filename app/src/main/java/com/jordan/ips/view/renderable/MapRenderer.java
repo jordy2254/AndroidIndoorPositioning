@@ -18,8 +18,12 @@ import java.util.List;
 
 public class MapRenderer implements Renderable {
 
+    public static final int ROOM_COLOR = 0xf0ae5d;
+    public static final int WALL_COLOR = 0x000000;
+
     private int selectedFloorIndex = 0;
     private final Map selectedMap;
+
 
     public MapRenderer(Map selectedMap) {
         this.selectedMap = selectedMap;
@@ -42,22 +46,16 @@ public class MapRenderer implements Renderable {
                                 .multiply(new Point2d(scale, scale))
                                 .add(offset);
 
-
-//                            List<Point2d> renderPoints = RoomPolygonGenerator.translate(roomPolygonCache.get(room.getId()), translation);
-//                            renderPoints = RoomPolygonGenerator.scale(renderPoints, scale);
                         List<Point2d> renderPoints = RoomPolygonGenerator.scale(room.getPolygon(), scale);
                         renderPoints = RoomPolygonGenerator.translate(renderPoints, translation);
-                        int color = 0xf0ae5d;
-//                            if(room.isSelected()){
-//                                color = 0xff00ff;
-//                            }
-                        screen.drawPolygonUpdated(renderPoints, 2, 0x0, color, true);
+
+                    screen.drawPolygonUpdated(renderPoints, 2, 0x0, ROOM_COLOR, true);
 
                         for (Pair<Point2d, Point2d> x :room.getWalls()) {
                             Point2d scaled1 = x.fst.multiply(new Point2d(scale, scale)).add(translation);
                             Point2d scaled2 = x.snd.multiply(new Point2d(scale, scale)).add(translation);
 
-                            screen.drawLine((int)scaled1.x, (int)scaled1.y, (int)scaled2.x, (int)scaled2.y, 2, 0x000000);
+                            screen.drawLine((int)scaled1.x, (int)scaled1.y, (int)scaled2.x, (int)scaled2.y, 2, WALL_COLOR);
                         }
 
                     })));
