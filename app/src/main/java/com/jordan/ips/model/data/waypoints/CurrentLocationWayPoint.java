@@ -1,5 +1,7 @@
 package com.jordan.ips.model.data.waypoints;
 
+import android.location.Location;
+
 import com.jordan.ips.model.locationTracking.LocationService;
 import com.jordan.ips.model.utils.PathFindingUtils;
 import com.jordan.ips.model.data.map.persisted.Map;
@@ -12,7 +14,6 @@ public class CurrentLocationWayPoint extends Waypoint<LocationService>{
     private final Map map;
     private PathNode pathNode;
 
-    Point2d cLoc = new Point2d(170,290);
 
     public CurrentLocationWayPoint(LocationService point, Map map) {
         super(point);
@@ -21,8 +22,7 @@ public class CurrentLocationWayPoint extends Waypoint<LocationService>{
 
     @Override
     public Point2d getLocation() {
-        cLoc = cLoc.add(new Point2d(1,0));
-        return cLoc;
+        return point.calculateCurrentLocation();
     }
 
     @Override
@@ -33,11 +33,17 @@ public class CurrentLocationWayPoint extends Waypoint<LocationService>{
     @Override
     public void setSelected(boolean selected) {
         this.selected = selected;
+        if(!this.selected && pathNode != null){
+            PathFindingUtils.unlinkDynamicPathNode(pathNode, true);
+        }
     }
 
     @Override
     public void toggleSelected() {
         this.selected = !selected;
+        if(!this.selected && pathNode != null){
+            PathFindingUtils.unlinkDynamicPathNode(pathNode, true);
+        }
     }
 
     @Override

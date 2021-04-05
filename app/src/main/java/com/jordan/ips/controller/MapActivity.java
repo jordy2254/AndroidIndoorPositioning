@@ -24,6 +24,7 @@ import com.jordan.ips.model.data.waypoints.CurrentLocationWayPoint;
 import com.jordan.ips.model.data.waypoints.DynamicWaypoint;
 import com.jordan.ips.model.data.waypoints.RoomWaypoint;
 import com.jordan.ips.model.data.waypoints.Waypoint;
+import com.jordan.ips.model.locationTracking.LocationService;
 import com.jordan.ips.model.pathfinding.AStarPathFindingAlgorithm;
 import com.jordan.ips.model.utils.MapUtils;
 import com.jordan.ips.view.Canvas;
@@ -189,7 +190,7 @@ public class MapActivity extends AppCompatActivity implements LongTouchListener,
                 setEndWaypoint(null);
                 return;
             case LocationSearchActivity.RESPONSE_CURRENT_LOCATION:
-                waypoint = Optional.of(new CurrentLocationWayPoint(null, mapWrapper.getMap()));
+                waypoint = Optional.of(new CurrentLocationWayPoint(LocationService.getINSTANCE(), mapWrapper.getMap()));
                 break;
             case LocationSearchActivity.RESPONSE_POINT_ON_MAP:
                 //TODO interact with the canvas to+ detect a long press!
