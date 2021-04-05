@@ -1,5 +1,7 @@
 package com.jordan.renderengine;
 
+import android.util.Log;
+
 import com.jordan.renderengine.data.Point2d;
 import com.jordan.renderengine.data.Point2i;
 
@@ -141,6 +143,39 @@ public class Screen {
             Point2d firstPoint = points.get(0);
             Point2d lastPoint = points.get(points.size() - 1);
             drawLine((int)firstPoint.x, (int)firstPoint.y, (int)lastPoint.x, (int)lastPoint.y, lineSize, lineColor);
+        }
+    }
+
+
+    private void eightQuadrent(int xc, int yc, int x, int y, int color)
+    {
+        setPixelWithDilation(xc+x, yc+y, color);
+        setPixelWithDilation(xc-x, yc+y, color);
+        setPixelWithDilation(xc+x, yc-y, color);
+        setPixelWithDilation(xc-x, yc-y, color);
+        setPixelWithDilation(xc+y, yc+x, color);
+        setPixelWithDilation(xc-y, yc+x, color);
+        setPixelWithDilation(xc+y, yc-x, color);
+        setPixelWithDilation(xc-y, yc-x, color);
+    }
+
+    public void drawCircle(int xc, int yc, int r, int color)
+    {
+        //Circle code from: https://www.geeksforgeeks.org/bresenhams-circle-drawing-algorithm/
+        int x = 0, y = r;
+        int d = 3 - 2 * r;
+        eightQuadrent(xc, yc, x, y, color);
+        while (y >= x)
+        {
+            x++;
+            if (d > 0)
+            {
+                y--;
+                d = d + 4 * (x - y) + 10;
+            }
+            else
+                d = d + 4 * x + 6;
+            eightQuadrent(xc, yc, x, y, color);
         }
     }
 
@@ -415,6 +450,33 @@ public class Screen {
 
     public boolean validateDrawBounds(int dx, int dy){
         return dx >= 0 && dx < this.width && dy >= 0 && dy < height;
+    }
+
+
+    public void setPixel(int dx, int dy, int color){
+        if(!validateDrawBounds(dx, dy)){
+            return;
+        }
+
+        pixels[dx + dy * width] = color;
+
+    }
+
+    public void setPixelWithDilation(float dx, float dy, int color){
+
+        for(int x = -1; x < 2; x++){
+            for(int y = -1; y < 2; y++){
+                if(BRESENHAM_DILATION_MASK[(x + 1) + (y + 1) * 3]){
+                    setPixel((dx + x), (dy + y), color);
+                }
+            }
+        }
+
+
+    }
+
+    public void setPixel(float dx, float dy, int color){
+        setPixel((int)dx, (int)dy, color);
     }
 
     public static synchronized Screen getInstance(){
