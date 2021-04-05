@@ -107,6 +107,13 @@ public class BluetoothScanService extends ScanCallback implements ScanAndDistanc
         return distance * 100;
     }
 
+    public Map<String, Double> getAllMesurements(){
+        Map<String, Double> retVal = new HashMap<>();
+        for (String key : sensorData.keySet()) {
+            retVal.put(key, calculateDistanceInCm(key));
+        }
+        return retVal;
+    }
     public static String convertToHex(byte[] data) {
         StringBuilder buf = new StringBuilder();
         for (byte datum : data) {
