@@ -47,4 +47,8 @@ public class LocationService {
         }
         return INSTANCE;
     }
+
+    public List<ScanAndDistanceService> getScanners() {
+        return scanners;
+    }
 }
