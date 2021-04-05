@@ -1,8 +1,6 @@
 package com.jordan.ips.model.data.waypoints;
 
-import android.location.Location;
-
-import com.jordan.ips.model.locationTracking.LocationService;
+import com.jordan.ips.model.locationTracking.calculators.LocationService;
 import com.jordan.ips.model.utils.PathFindingUtils;
 import com.jordan.ips.model.data.map.persisted.Map;
 import com.jordan.ips.model.data.pathfinding.PathNode;

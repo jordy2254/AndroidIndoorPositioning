@@ -1,4 +1,4 @@
-package com.jordan.ips.model.locationTracking;
+package com.jordan.ips.model.locationTracking.scanners;
 
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.le.ScanCallback;
@@ -14,7 +14,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class BluetoothScanService extends ScanCallback {
+public class BluetoothScanService extends ScanCallback implements ScanAndDistanceService {
 
     private static BluetoothScanService INSTANCE = null;
 
@@ -32,7 +32,8 @@ public class BluetoothScanService extends ScanCallback {
 
     }
 
-    public void startScan(){
+    @Override
+    public void start() {
         List<ScanFilter> filters = new ArrayList<>();
         filters.add(
                 new ScanFilter.Builder()
@@ -46,9 +47,15 @@ public class BluetoothScanService extends ScanCallback {
         running = true;
     }
 
-    public void stopScan(){
+    @Override
+    public void stop() {
         mAdapter.getBluetoothLeScanner().stopScan(this);
         running = false;
+    }
+
+    @Override
+    public double getDistance(String id) {
+        return 0;
     }
 
     public boolean isRunning() {
@@ -85,14 +92,6 @@ public class BluetoothScanService extends ScanCallback {
         super.onScanFailed(errorCode);
     }
 
-
-    public synchronized static BluetoothScanService getInstance(){
-        if (INSTANCE == null) {
-            INSTANCE = new BluetoothScanService();
-        }
-        return INSTANCE;
-    }
-
     public double calculateDistanceInCm(String sensor){
         Integer[] data = sensorData.get(sensor);
         if(data == null){
@@ -116,5 +115,12 @@ public class BluetoothScanService extends ScanCallback {
             } while (two_halfs++ < 1);
         }
         return buf.toString();
+    }
+
+    public synchronized static BluetoothScanService getInstance(){
+        if (INSTANCE == null) {
+            INSTANCE = new BluetoothScanService();
+        }
+        return INSTANCE;
     }
 }
