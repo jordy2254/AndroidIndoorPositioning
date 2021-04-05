@@ -148,6 +148,8 @@ public class Screen {
         //https://www.cs.rit.edu/~icss571/filling/how_to.html
         List<Double[]> allEdgeTable = new ArrayList<>();
 
+        boolean ends = points.get(0).equals(points.get(points.size() -1));
+
         //table indexes:
         int minYIndex = 0;
         int maxYIndex = 1;
@@ -156,12 +158,16 @@ public class Screen {
 
         List<Integer> globalEdgeIndexes = new ArrayList<>();
 
+
         //initialise all edges
         for (int i = 1; i <= points.size(); i++) {
 
             Point2d prevPoint = null;
             Point2d cPoint = null;
             if(i == points.size()){
+                if(ends){
+                    continue;
+                }
                 prevPoint = points.get(0);
                 cPoint = points.get(points.size() - 1);
             }else{
