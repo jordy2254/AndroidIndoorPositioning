@@ -31,12 +31,9 @@ public class LocationService {
     }
 
     public Point2d calculateCurrentLocation(){
+        //TODO remove hard coded floor value
         List<Sensor> sensors = map.getBuildings().get(0).getFloors().get(0).getSensors();
-        java.util.Map<String, Double> sensorData = new HashMap<>();
 
-        for (ScanAndDistanceService s: scanners) {
-            sensorData.putAll(s.getAllMesurements());
-        }
 
         return new Point2d(10,10);
     }
@@ -66,5 +63,14 @@ public class LocationService {
 
     public void setMap(Map map) {
         this.map = map;
+    }
+
+    public java.util.Map<String, Double> getAllMeasurements() {
+        java.util.Map<String, Double> sensorData = new HashMap<>();
+
+        for (ScanAndDistanceService s: scanners) {
+            sensorData.putAll(s.getAllMesurements());
+        }
+        return sensorData;
     }
 }

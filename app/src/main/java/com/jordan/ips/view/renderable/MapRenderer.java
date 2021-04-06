@@ -1,7 +1,9 @@
 package com.jordan.ips.view.renderable;
 
+import com.jordan.ips.model.data.map.persisted.Floor;
 import com.jordan.ips.model.data.map.persisted.Map;
 import com.jordan.ips.model.data.pathfinding.PathNode;
+import com.jordan.ips.model.locationTracking.calculators.LocationService;
 import com.jordan.ips.model.utils.rendering.RoomPolygonGenerator;
 import com.jordan.renderengine.Screen;
 import com.jordan.renderengine.data.Pair;
@@ -15,6 +17,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class MapRenderer implements Renderable {
 
@@ -23,6 +26,7 @@ public class MapRenderer implements Renderable {
 
     private int selectedFloorIndex = 0;
     private final Map selectedMap;
+    LocationService s = LocationService.getINSTANCE();
 
 
     public MapRenderer(Map selectedMap) {
@@ -59,7 +63,19 @@ public class MapRenderer implements Renderable {
                         }
 
                     })));
-        renderPathNodes(screen, offset, scale);
+
+        java.util.Map<String, Double> allmeasurements = s.getAllMeasurements();
+        selectedMap.getBuildings().forEach(building -> building.getFloors()
+                .stream()
+                .filter(floor -> floor.getFloorNumber() == selectedFloorIndex)
+                .flatMap(floor -> floor.getSensors().stream())
+                .forEach(sensor -> {
+                    Point2d d = sensor.getLocation().multiply(new Point2d(scale, scale)).add(offset);
+                    for(String key : allmeasurements.keySet()) {
+                        double r = allmeasurements.get(key);
+                        screen.drawCircle(((int) d.x), ((int) d.y), ((int) r), 0x000000);
+                    }
+                }));
     }
 
     public int getSelectedFloorIndex() {

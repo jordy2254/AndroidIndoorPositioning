@@ -103,7 +103,8 @@ public class BluetoothScanService extends ScanCallback implements ScanAndDistanc
         if(data == null){
             return Double.POSITIVE_INFINITY;
         }
-        double distance  = Math.pow(10, (((double)-61) - ((double)data[RSSI_INDEX])) / (10.0 * 2));
+
+        double distance  = Math.pow(10, (-61 - (data[RSSI_INDEX] + 41)) / (10.0 * 1));
         return distance * 100;
     }
 
@@ -114,6 +115,7 @@ public class BluetoothScanService extends ScanCallback implements ScanAndDistanc
         }
         return retVal;
     }
+
     public static String convertToHex(byte[] data) {
         StringBuilder buf = new StringBuilder();
         for (byte datum : data) {
