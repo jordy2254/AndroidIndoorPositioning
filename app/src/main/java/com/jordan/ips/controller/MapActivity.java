@@ -155,7 +155,7 @@ public class MapActivity extends AppCompatActivity implements LongTouchListener,
 
         updateLayout();
         locationService.start();
-
+        LocationService.getINSTANCE().setMap(mapWrapper.getMap());
 //        new Thread(() -> BluetoothScanner.test(), "Sensor Thread").start();
     }
 

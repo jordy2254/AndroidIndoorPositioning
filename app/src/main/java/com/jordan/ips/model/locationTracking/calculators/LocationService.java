@@ -1,5 +1,7 @@
 package com.jordan.ips.model.locationTracking.calculators;
 
+import android.util.Log;
+
 import com.jordan.ips.model.data.map.persisted.Map;
 import com.jordan.ips.model.data.map.persisted.Sensor;
 import com.jordan.ips.model.locationTracking.scanners.BluetoothScanService;
@@ -11,6 +13,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class LocationService {
 
@@ -33,9 +37,40 @@ public class LocationService {
     public Point2d calculateCurrentLocation(){
         //TODO remove hard coded floor value
         List<Sensor> sensors = map.getBuildings().get(0).getFloors().get(0).getSensors();
+        List<String> sensorIds = sensors.stream().map(Sensor::getSensorId).collect(Collectors.toList());
 
+        java.util.Map<String, Double> mesurements = getAllMeasurements();
 
-        return new Point2d(10,10);
+        Double cShort = -1d;
+        String cKey = "";
+        for (String key : mesurements.keySet()) {
+            if(!sensorIds.contains(key)){
+                continue;
+            }
+            if(cKey == ""){
+                cKey = key;
+                cShort = mesurements.get(key);
+                continue;
+            }
+
+            if(mesurements.get(key) < cShort){
+                cKey = key;
+                cShort = mesurements.get(key);
+            }
+        }
+
+        if(cKey == ""){
+            return new Point2d(10,10);
+        }
+        Log.i("Location", cKey);
+        String finalCKey = cKey;
+        List<Sensor> collected = sensors.stream().filter(s->s.getSensorId().equals(finalCKey)).collect(Collectors.toList());
+        Optional<Sensor> sensor = sensors.stream().filter(s->s.getSensorId().equals(finalCKey)).findFirst();
+        if(!sensor.isPresent()){
+            Log.i("Location", "Sensor not present");
+            return new Point2d(40,40);
+        }
+        return sensor.get().getLocation();
     }
 
     public void start(){

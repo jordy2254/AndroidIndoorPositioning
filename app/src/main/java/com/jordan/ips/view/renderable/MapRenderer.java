@@ -71,11 +71,18 @@ public class MapRenderer implements Renderable {
                 .flatMap(floor -> floor.getSensors().stream())
                 .forEach(sensor -> {
                     Point2d d = sensor.getLocation().multiply(new Point2d(scale, scale)).add(offset);
-                    for(String key : allmeasurements.keySet()) {
-                        double r = allmeasurements.get(key);
-                        screen.drawCircle(((int) d.x), ((int) d.y), ((int) r), 0x000000);
+                    if(!allmeasurements.containsKey(sensor.getSensorId())){
+                        return;
                     }
+
+                        double r = allmeasurements.get(sensor.getSensorId());
+                    if(r > 150){
+                        return;
+                    }
+                        screen.drawCircle(((int) d.x), ((int) d.y), ((int) r), 0x000000);
+
                 }));
+//        renderPathNodes(screen, offset, scale);
     }
 
     public int getSelectedFloorIndex() {

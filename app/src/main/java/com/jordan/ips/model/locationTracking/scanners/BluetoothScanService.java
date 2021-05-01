@@ -104,7 +104,7 @@ public class BluetoothScanService extends ScanCallback implements ScanAndDistanc
             return Double.POSITIVE_INFINITY;
         }
 
-        double distance  = Math.pow(10, (-61 - (data[RSSI_INDEX] + 41)) / (10.0 * 1));
+        double distance  = Math.pow(10, (-61 - data[RSSI_INDEX]) / (10.0 * 1));
         return distance * 100;
     }
 

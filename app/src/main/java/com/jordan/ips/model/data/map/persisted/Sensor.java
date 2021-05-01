@@ -7,6 +7,7 @@ import java.io.Serializable;
 public class Sensor implements Serializable {
 
     private String id;
+    private String sensorId;
     private int floorId;
     private Point2d location;
 
@@ -32,5 +33,13 @@ public class Sensor implements Serializable {
 
     public void setLocation(Point2d location) {
         this.location = location;
+    }
+
+    public String getSensorId() {
+        return sensorId;
+    }
+
+    public void setSensorId(String sensorId) {
+        this.sensorId = sensorId;
     }
 }
